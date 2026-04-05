@@ -1,0 +1,4 @@
+organism,total_multigene_families,D_ge_1_count,D_ge_1_pct,D_ge_3_count,D_ge_3_pct,D_ge_5_count,D_ge_5_pct,D_ge_8_count,D_ge_8_pct,source,notes
+H. sapiens,3586,3586,100,290,8.1,40,1.1,3-5,0.1,"Mazzoni & Bhatt 2016 R Soc Open Sci; Ensembl Compara","Conservative lower bounds (balanced-tree D_min=ceil(log2(n)))"
+A. thaliana,7000+,7000+,100,1000+,15-20,200+,3-5,35-70,0.5-1,"AGI 2000 Nature; Shiu & Bleecker 2001; Lurin 2004","F-box 692 RLK 610+ PPR 466 CYP450 244 NBS-LRR 150+"
+E. coli K-12,400,400,100,40-50,5,5-8,0.7,0,0,"Blattner et al. 1997; Serres et al. 2009","Max family=80 ABC transporters. D_min=6"
