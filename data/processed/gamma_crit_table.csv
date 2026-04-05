@@ -1,0 +1,16 @@
+organism,D_family,T_midpoint,gamma_crit_family,F15b
+H. sapiens,8.0,9290000.0,7.4,T3req
+O. sativa,6.0,160000000.0,23.3,T3req
+D. rerio,6.0,1020000000.0,31.7,T3req
+A. thaliana,5.0,3580000000.0,81.4,T3req
+F. albicollis,4.0,75000000.0,93.1,T3req
+C. elegans,5.0,62600000000.0,144.3,Tmarg
+D. melanogaster,4.0,6520000000.0,284.2,Tmarg
+D. discoideum,4.0,2190000000000.0,1216.5,Tmarg
+S. cerevisiae,4.0,3290000000000.0,1346.8,Tmarg
+P. aeruginosa,4.0,10200000000000.0,1787.1,Tmarg
+H. salinarum,3.0,1750000000000.0,12050.7,T2ok
+S. pombe,3.0,2190000000000.0,12986.2,T2ok
+S. solfataricus,3.0,6570000000000.0,18729.3,T2ok
+E. coli,3.0,20400000000000.0,27323.9,T2ok
+M. jannaschii,2.0,17500000000000.0,4183300.1,T2ok

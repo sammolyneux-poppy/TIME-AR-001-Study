@@ -1,0 +1,27 @@
+system,domain,D_observed,T_calendar_yr,transmission_rate_per_yr,T_events,F15_verdict_r2,notes
+Natural language morpheme families,LANG,4-5,7000,1e9,7e12,Tmarg_cultural,"Massive parallelism; sequential dependency contested"
+Legal precedent chains,LANG,10-15,225,6e6,1.4e9,Tmarg_cultural,"Fowler & Jeon 2008; deep but structured search"
+Mathematical notation,LANG,7,3500,3.6e6,1e9,Tmarg_cultural,"Marginal at formal proof level D=15-25"
+Musical composition forms,LANG,5-6,500,1e5,1e8,Tmarg_cultural,"Lerdahl & Jackendoff 1983"
+Proverb families,LANG,1-2,5000,1e8,1e12,T2ok,"Paradigmatic T2ok control"
+Linux kernel (module nesting),COMP,6-10,35,75000,2.5e6,Tmarg_cultural,"Module nesting is gene-family analog; call graph is NOT"
+Chess opening trees (branching),COMP,8-12,500,1e6,1e10,Tmarg_cultural,"Blasius & Tonjes 2009"
+Programming language families,COMP,5-8,69,200,1e4,Tmarg_cultural,"Lateral influences complicate strict genealogy"
+Compiler IR hierarchies,COMP,6-11,50,30000,1e6,Tmarg_cultural,"Rust: 7 pipeline stages; LLVM adds 4 more"
+Regular expressions,COMP,2-3,70,1e8,1e10,T2ok,"Chomsky Type 3; non-recursive"
+Finite automata,COMP,1,70,,,,Tna: flat
+Patent citation genealogy,ECON,5-6,230,,1e7,Tmarg_cultural,"USPTO diameter 22; cultural evolution"
+Corporate hierarchies,ECON,10,,,,Tna,"Designed not evolved; Ewens & Giroud 2025"
+Baby name families,ECON,1-2,200,,,T2ok,"Flat; Hahn & Bentley 2003"
+Dog breed lineages,ECON,2-3,200,,,T2ok,"Artificial selection; Parker et al. 2017"
+Income/wealth,ECON,,,,,,Tna: no hierarchy
+Stock returns,ECON,,,,,,Tna: no hierarchy
+City sizes,ECON,,,,,,Tna: Gibrat mechanism
+PPI module hierarchy,INFO,4-6,3000000000,,1e12,T3req_bio,"Evolutionary (germline); Ravasz et al. 2002"
+WWW site nesting,INFO,3-5,35,1e6,1e7,Tna,"Constructed not evolved"
+Scientific citation genealogy,INFO,3-5,350,,,Tmarg,"Weakly evolutionary; cultural"
+Internet AS topology,INFO,2-3,30,,,Tna,"Constructed; Faloutsos et al. 1999"
+Brain cortical hierarchy (GENE-FAMILY BASIS),NEUR,5-7,300000000,,1e9,T3req_bio,"TF superfamilies encoding cortical specification"
+Neural cell type diversity,NEUR,4,500000000,,1e9,T3req_bio,"Allen Brain Cell Atlas; Yao et al. 2023"
+Memory schemas,NEUR,4-6,0.07,,,Tmarg,"Within-lifetime; constructed"
+Neuronal avalanches,NEUR,,,,,,Tna: dynamics not hierarchy
