@@ -1,7 +1,7 @@
-mechanism,gamma_measured,system,timescale,primary_citation
-Recombination vs clonal (adaptation rate),1.5-2x,E. coli (LTEE),Hundreds of generations,"Cooper ~2007 PNAS"
-Sexual vs asexual (fitness gain rate),~2x,S. cerevisiae,~300 generations,"Goddard et al. 2005 Nature"
-Sexual vs asexual (fitness gain),~2x,Chlamydomonas reinhardtii,~50 sexual cycles,"Colegrave 2002 Nature"
-Recombination (HRI relief theory+data),2-10x,Various / Drosophila,Varies,"McDonald Rice Desai 2016 Genetics"
-Gene duplication IAD (new function),100-10000x,Salmonella enterica,~10-100 generations,"Nasvall et al. 2012 Science"
-Genome growth (duplicating vs non-dup),Qualitative jump (2x per WGD vs linear),Eukaryotes vs bacteria,Evolutionary time,"Lynch & Conery 2003 Science"
+mechanism,gamma_measured,system,timescale,primary_citation,evidence_mode,computational_role
+Recombination vs clonal (adaptation rate),1.5-2x,E. coli (LTEE),Hundreds of generations,Cooper ~2007 PNAS,direct_extract,supporting_evidence
+Sexual vs asexual (fitness gain rate),~2x,S. cerevisiae,~300 generations,Goddard et al. 2005 Nature,direct_extract,supporting_evidence
+Sexual vs asexual (fitness gain),~2x,Chlamydomonas reinhardtii,~50 sexual cycles,Colegrave 2002 Nature,direct_extract,supporting_evidence
+Recombination (HRI relief theory+data),2-10x,Various / Drosophila,Varies,McDonald Rice Desai 2016 Genetics,direct_extract,supporting_evidence
+Gene duplication IAD (new function),100-10000x,Salmonella enterica,~10-100 generations,Nasvall et al. 2012 Science,direct_extract,supporting_evidence
+Genome growth (duplicating vs non-dup),Qualitative jump (2x per WGD vs linear),Eukaryotes vs bacteria,Evolutionary time,Lynch & Conery 2003 Science,direct_extract,supporting_evidence

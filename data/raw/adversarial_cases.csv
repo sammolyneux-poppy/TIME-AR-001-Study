@@ -1,9 +1,9 @@
-system,domain,D_observed,D_midpoint,mechanism,gamma_crit_est,F15_verdict,rationale,primary_citation
-Horizontal gene transfer networks,BIO,3-5,4.0,Lateral transfer bypasses vertical descent,NA,Tmarg,"HGT creates apparent depth without vertical accumulation","Gogarten et al. 2002 Mol Biol Evol"
-Transposable element families,BIO,3-4,3.5,TE-mediated duplication creates family structure,NA,Tmarg,"Shallow TE-driven families; depth limited by purifying selection","Wicker et al. 2007 Nat Rev Genet"
-Retroviral integrations (ERVs),BIO,2-3,2.5,Retroviral integration creates nested insertions,NA,T2ok,"Fixed depth; no recursive elaboration","Jern & Coffin 2008 Microbiol Mol Biol Rev"
-CpG island families,BIO,1-2,1.5,Methylation-driven clustering,NA,T2ok,"No duplication-divergence mechanism","Illingworth & Bird 2009 FEBS Lett"
-Microsatellite expansion,BIO,1,1.0,Slippage replication,NA,T2ok,"No hierarchy; single-level repeat expansion","Ellegren 2004 Nat Rev Genet"
-Viral quasispecies,BIO,2-3,2.5,Rapid mutation without stable hierarchy,NA,T2ok,"Cloud of variants; no nested hierarchy","Eigen 1993; Domingo et al. 2012"
-Plasmid compatibility groups,BIO,1-2,1.5,Plasmid classification by replication,NA,Tna,"Classification not evolutionary hierarchy","Novick 1987 Microbiol Rev"
-Prophage families,BIO,2-3,2.5,Phage integration into host genomes,NA,T2ok,"Shallow depth; temperate phage lifecycle","Casjens 2003 Mol Microbiol"
+system,domain,D_observed,D_midpoint,mechanism,gamma_crit_est,F15_verdict,rationale,primary_citation,evidence_mode,computational_role
+Horizontal gene transfer networks,BIO,3-5,4.0,Lateral transfer bypasses vertical descent,NA,Tmarg,HGT creates apparent depth without vertical accumulation,Gogarten et al. 2002 Mol Biol Evol,curated_synthesis,supporting_evidence
+Transposable element families,BIO,3-4,3.5,TE-mediated duplication creates family structure,NA,Tmarg,Shallow TE-driven families; depth limited by purifying selection,Wicker et al. 2007 Nat Rev Genet,curated_synthesis,supporting_evidence
+Retroviral integrations (ERVs),BIO,2-3,2.5,Retroviral integration creates nested insertions,NA,T2ok,Fixed depth; no recursive elaboration,Jern & Coffin 2008 Microbiol Mol Biol Rev,curated_synthesis,supporting_evidence
+CpG island families,BIO,1-2,1.5,Methylation-driven clustering,NA,T2ok,No duplication-divergence mechanism,Illingworth & Bird 2009 FEBS Lett,curated_synthesis,supporting_evidence
+Microsatellite expansion,BIO,1,1.0,Slippage replication,NA,T2ok,No hierarchy; single-level repeat expansion,Ellegren 2004 Nat Rev Genet,curated_synthesis,supporting_evidence
+Viral quasispecies,BIO,2-3,2.5,Rapid mutation without stable hierarchy,NA,T2ok,Cloud of variants; no nested hierarchy,Eigen 1993; Domingo et al. 2012,curated_synthesis,supporting_evidence
+Plasmid compatibility groups,BIO,1-2,1.5,Plasmid classification by replication,NA,Tna,Classification not evolutionary hierarchy,Novick 1987 Microbiol Rev,curated_synthesis,supporting_evidence
+Prophage families,BIO,2-3,2.5,Phage integration into host genomes,NA,T2ok,Shallow depth; temperate phage lifecycle,Casjens 2003 Mol Microbiol,curated_synthesis,supporting_evidence

@@ -1,5 +1,5 @@
-family,domain,D_depth,function_in_cortex,T_gen,gamma_crit,F15_verdict,primary_citation
-FGF family,NEUR,5,Area patterning (FGF8 FGF17 FGF18),9.3e6,63,Tmarg,"Ornitz & Itoh 2015 WIREs Dev Biol"
-Wnt family,NEUR,5,Progenitor proliferation and polarity,9.3e6,63,Tmarg,"Nusse & Clevers 2017 Cell"
-Eph/ephrin family,NEUR,5,Topographic mapping,9.3e6,63,Tmarg,"Kania & Klein 2016 Genes Dev"
-NR superfamily,NEUR,6,Laminar specification (COUP-TF RAR),9.3e6,22,Tmarg,"Bookout et al. 2006 Cell"
+family,domain,D_depth,function_in_cortex,T_gen,gamma_crit,F15_verdict,primary_citation,evidence_mode,computational_role
+FGF family,NEUR,5,Area patterning (FGF8 FGF17 FGF18),9.3e6,63,Tmarg,Ornitz & Itoh 2015 WIREs Dev Biol,curated_synthesis,supporting_evidence
+Wnt family,NEUR,5,Progenitor proliferation and polarity,9.3e6,63,Tmarg,Nusse & Clevers 2017 Cell,curated_synthesis,supporting_evidence
+Eph/ephrin family,NEUR,5,Topographic mapping,9.3e6,63,Tmarg,Kania & Klein 2016 Genes Dev,curated_synthesis,supporting_evidence
+NR superfamily,NEUR,6,Laminar specification (COUP-TF RAR),9.3e6,22,Tmarg,Bookout et al. 2006 Cell,curated_synthesis,supporting_evidence

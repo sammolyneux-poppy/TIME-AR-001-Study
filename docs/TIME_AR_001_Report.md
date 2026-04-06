@@ -2,12 +2,13 @@
 
 ## FP4 Cross-Domain Validation -- Time Budget Analysis
 
-**Version:** 3.1 (Pre-Publication)
-**Date:** 2026-04-05
+**Version:** 3.2 (Pre-Publication)
+**Date:** 2026-04-06
 **Companion to:** TIME-SPEC-001, FP4 Cross-Domain Validation Report (v2.1)
 **Status:** Pre-Publication Draft
 **Word Count:** ~32,000
 **Changelog:**
+- v3.1.2 -> v3.2: Citation remediation. Adds §2.11 Evidence Classification (evidence modes, computational roles, authority files). Adds four new provenance files: source_registry.csv (84 sources), time_budget_evidence.csv (20 organisms), time_evidence_matrix.csv (field-level evidence for P10 priority systems), depth_evidence.csv (26 D-value entries). All 13 raw CSVs now carry evidence_mode and computational_role columns. wgd_adjusted_d.csv, d_distributions.csv, and cross_domain_temporal.csv carry explicit derivation/provenance columns. Dynamic sources (TimeTree, Ensembl) have access_date 2026-04-05. validate_sources.py added to pipeline (Step 6).
 - v3.1.1 -> v3.1.2: Reconciles all summary counts with authoritative pipeline output (classification_summary.csv): T2ok=25, Tmarg=22. Updates Fisher 2x2 table to 6 T3req vs 25 T2ok. Updates abstract approximate counts. No classification logic changes.
 - v3.1 -> v3.1.1: Corrects systematic arithmetic error in organism-level gamma_crit values (all organism-level gc recalculated as T^(1/D) using stated D and T). Classification changes: C. elegans F15a T2ok -> Tmarg, S. cerevisiae F15a T2ok -> Tmarg, P. aeruginosa F15a T2ok -> Tmarg. Adds organism-level Tmarg† policy for cases where gc < 100 but classified conservatively as Tmarg. Corrects Section 2.10.2 family count (8 families across 3 organisms, not 5 per organism). All family-level (F15b) classifications unchanged. Amphioxus TLR added to raw data. Full computational pipeline implemented (compute_gamma_crit.py, generate_figures.py, fisher_test.py, build_docx.py).
 - v1.1 -> v2.0: Addresses all Round 2 reviewer feedback (C1-C6, M1-M8, I1-I8). Major changes: exact Lean theorem statements (C1), F15a/F15b organism/family split (C2), tier definition + selection section (C3), cultural downgrade to Tmarg-dagger (C4), C. elegans reclassification (C5), pan-genome basis removed from F15 (C6), empirical gamma calibration (M1), brain cortical hierarchy replaced with gene-family basis (M3), Linux D corrected to module nesting (M4), FP4 proof depth self-reference (M5), logistic regression (M6), WGD-adjusted D column (M7), adversarial cases (I3), amphioxus non-WGD control (I5), consolidated gamma_crit table (I7), qualified publication claims (I8).
@@ -500,6 +501,77 @@ Largest family: ABC transporters (~80 members, D_min = 6).
 These are LOWER BOUNDS on hierarchy depth due to the balanced-tree assumption. With 76% asymmetric branching (Herrada et al. 2011), actual depths are considerably higher. A family of 32 members with realistic imbalance easily has D = 8-12, not D = 5. Gene family size follows a power law with exponent alpha ~ 1.7-2.3 (Huynen & van Nimwegen 1998), so deep families are the tail of a well-characterized distribution, not anomalous outliers.
 
 The key finding is that deep gene families (D >= 5) are not unique: ~40 human families, ~200+ Arabidopsis families, and ~5-8 E. coli families exceed this threshold under the most conservative depth estimate. The kinase superfamily is the deepest and best-characterized, but it is far from alone. GPCRs, KRAB-ZNFs, olfactory receptors, solute carriers, and many others have comparable depth.
+
+### 2.11 Evidence Classification (NEW -- v3.2)
+
+This section documents the evidence architecture of the TIME study, distinguishing three classes of input evidence and two classes of computational role. This classification was added in v3.2 in response to external citation audit findings (TIME Source-Remediation Punch List, priorities P0-P12).
+
+#### 2.11.1 Three Evidence Modes
+
+Every field in every raw CSV input is classified into one of three evidence modes:
+
+| Evidence Mode | Definition | Example |
+|---|---|---|
+| `direct_extract` | Value directly quoted or numerically extracted from a cited peer-reviewed source; no study-specific transformation | D=8 from Manning et al. 2002 kinome tree |
+| `curated_synthesis` | Consensus value synthesized from multiple sources; primary citation provided; no free-parameter adjustment | Clade age midpoint from TimeTree + molecular clock studies |
+| `modeling_input` | Study-derived value computed by applying a study-defined rule to source data; explicitly noted derivation | D_wgd_adj = D_raw - 1 (WGD-adjusted D) |
+
+The three modes are mutually exclusive and exhaustive. Mixed-mode files (where some fields are `direct_extract` and others are `modeling_input`) are documented at row level in `data/raw/time_evidence_matrix.csv`.
+
+#### 2.11.2 Two Computational Roles
+
+Every raw CSV file is assigned a computational role indicating how the pipeline uses it:
+
+| Computational Role | Definition | Files |
+|---|---|---|
+| `executable_input` | Directly read by pipeline scripts (compute_gamma_crit.py, fisher_test.py) | time_budgets.csv, wgd_adjusted_d.csv, confirmed_deep_families.csv, organism_family_map.csv |
+| `supporting_evidence` | Background evidence; not read by pipeline scripts; used to justify parameter choices | deep_paralog_families.csv, organism_hierarchy_depths.csv, adversarial_cases.csv, shallow_systems.csv, gamma_calibration.csv, physical_fractals.csv, cortical_families.csv, d_distributions.csv, cross_domain_temporal.csv |
+| `conceptual_only` | Conceptual framing only; no computational role | None (all TIME inputs are supporting or executable) |
+
+#### 2.11.3 Authority Files
+
+Two files are internal study authority files, not primary evidence sources:
+
+- **`confirmed_deep_families.csv`**: Records the 6 confirmed T3req gene families. Each row summarizes a classification decision backed by entries in `time_evidence_matrix.csv` and `depth_evidence.csv`. **This file is `curated_synthesis` / `executable_input` / `authority_file = yes`.**
+- **`organism_family_map.csv`**: Maps each of 16 organisms to its deepest gene family for gamma_crit computation. **This file is `curated_synthesis` / `executable_input` / `authority_file = yes`.**
+
+These files should not be cited as primary evidence. They are compilation artifacts that synthesize primary evidence into pipeline-ready form.
+
+#### 2.11.4 Three Mixed-Evidence Files
+
+Three files mix evidence modes and required explicit provenance repair in v3.2:
+
+**`wgd_adjusted_d.csv`** (P3A): Mixes `direct_extract` (D_raw from published phylogenies) with `modeling_input` (D_wgd_adj = D_raw + wgd_adjustment). The adjustment is -1 per verified WGD event. Each row now carries `D_raw_evidence_mode`, `D_raw_source_id`, `wgd_adjustment_derivation`, and `D_wgd_adj_evidence_mode` columns.
+
+**`d_distributions.csv`** (P3C): Mixes `direct_extract` (raw family counts from genome annotations) with `modeling_input` (D_ge_N threshold counts). Each row now carries `count_definition`, `includes_pseudogenes`, `threshold_derivation_note`, and `source_id` columns.
+
+**`cross_domain_temporal.csv`** (P3B): Mixes `direct_extract` (D_observed), `curated_synthesis` (T_calendar_yr), `modeling_input` (T_events derived from transmission rates), and conceptual analogy (F15_verdict_basis). Each row now carries `D_evidence_mode`, `D_source_id`, `T_derivation_note`, `T_evidence_mode`, and `F15_verdict_basis` columns.
+
+#### 2.11.5 New Provenance Files (v3.2)
+
+Four new files provide the evidence layer required for external reconstruction:
+
+| File | Purpose | Rows |
+|---|---|---|
+| `data/raw/source_registry.csv` | Canonical source registry with DOIs, URLs, access dates | 84 |
+| `data/raw/time_budget_evidence.csv` | Explicit clade_age and gen_time provenance for all 21 organisms | 20 |
+| `data/raw/time_evidence_matrix.csv` | Field-level evidence for P10 priority systems (T3req families + key organisms) | 30+ |
+| `data/raw/depth_evidence.csv` | D-value provenance per system including measurement rule and WGD derivation | 26 |
+
+Dynamic database sources (TimeTree, Ensembl) are frozen with `access_date = 2026-04-05` in `source_registry.csv`. TimeTree queries were performed on this date and the extracted values are documented in `time_budget_evidence.csv`.
+
+#### 2.11.6 Four-Bucket Reconstruction Status
+
+Every executable row falls into one of four reconstruction-status buckets:
+
+| Bucket | Criteria | Example rows |
+|---|---|---|
+| **Fully externally reconstructible** | All claims cite peer-reviewed literature; values independently verifiable from public data | 6 T3req family D values (Manning 2002, Huang 2008, etc.) |
+| **Partially externally reconstructible** | Core claims cited; some fields rely on database aggregation with access-date snapshot | Organism clade ages (TimeTree + molecular clock studies) |
+| **Curated-input only** | Values synthesized from multiple sources; primary citations provided but exact values depend on study judgment | Organism-level D_consensus; cross-domain T estimates |
+| **Needs reclassification or decomposition** | None identified in v3.2 audit | — |
+
+The `support_status` field in `time_evidence_matrix.csv` encodes this classification per field: `confirmed` / `partial` / `inferred` / `not_reconstructible`.
 
 ---
 

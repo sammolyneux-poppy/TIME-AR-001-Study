@@ -1,17 +1,17 @@
-organism,domain,D_dendrogram,D_domain,D_consensus,exemplar_family,family_size,primary_citation
-E. coli,Bacteria,3,3,3.0,ABC transporters,80,"Linton & Higgins 1998 Mol Microbiol 28:5-13"
-S. cerevisiae,Fungi,4,3,3.5,Protein kinases,130,"Manning et al. 2002 Science 298:1912-1934"
-H. sapiens,Mammalia,6,5,5.5,KRAB zinc fingers,800,"Huntley et al. 2006 Genome Res 16:669-677"
-C. elegans,Nematoda,5,4,4.5,Nuclear hormone receptors,284,"Robinson-Rechavi et al. 2005 Trends Genet 21:187-190"
-D. melanogaster,Insecta,4,4,4.0,Odorant receptors / Homeobox,60,"Robertson et al. 2003 PNAS 100:14537-14542"
-A. thaliana,Plantae,5,5,5.0,Receptor-like kinases / NBS-LRR,610,"Shiu & Bleecker 2001 PNAS 98:10763-10768"
-D. discoideum,Amoebozoa,4,3,3.5,Polyketide synthases / ABC transporters,40,"Eichinger et al. 2005 Nature 435:43-57"
-S. pombe,Fungi,3,3,3.0,Protein kinases,100,"Wood et al. 2002 Nature 415:871-880"
-P. aeruginosa,Bacteria,4,3,3.5,Two-component systems,120,"Stover et al. 2000 Nature 406:959-964"
-O. sativa,Plantae,6,5,5.5,NBS-LRR resistance genes,500,"Zhou et al. 2004 Mol Genet Genomics 271:402-415"
-D. rerio,Actinopterygii,6,5,5.5,Hox clusters / Odorant receptors,50,"Amores et al. 1998 Science 282:1711-1714"
-S. solfataricus,Crenarchaeota,3,2,2.5,Glycosyl hydrolases,30,"She et al. 2001 PNAS 98:7835-7840"
-M. jannaschii,Euryarchaeota,2,2,2.0,Methanogenesis enzymes,15,"Bult et al. 1996 Science 273:1058-1073"
-H. salinarum,Euryarchaeota,3,2,2.5,Halobacterial transducers,18,"Ng et al. 2000 PNAS 97:12176-12181"
-F. albicollis,Aves,4,3,3.5,Protein kinases,130,"Smeds et al. 2016 Genome Res 26:1158-1168"
-B. floridae,Cephalochordata,5,5,5.0,TLR superfamily,72,"Huang et al. 2008 J Immunol 180:6183-6191"
+organism,domain,D_dendrogram,D_domain,D_consensus,exemplar_family,family_size,primary_citation,evidence_mode,computational_role
+E. coli,Bacteria,3,3,3.0,ABC transporters,80,Linton & Higgins 1998 Mol Microbiol 28:5-13,curated_synthesis,supporting_evidence
+S. cerevisiae,Fungi,4,3,3.5,Protein kinases,130,Manning et al. 2002 Science 298:1912-1934,curated_synthesis,supporting_evidence
+H. sapiens,Mammalia,6,5,5.5,KRAB zinc fingers,800,Huntley et al. 2006 Genome Res 16:669-677,curated_synthesis,supporting_evidence
+C. elegans,Nematoda,5,4,4.5,Nuclear hormone receptors,284,Robinson-Rechavi et al. 2005 Trends Genet 21:187-190,curated_synthesis,supporting_evidence
+D. melanogaster,Insecta,4,4,4.0,Odorant receptors / Homeobox,60,Robertson et al. 2003 PNAS 100:14537-14542,curated_synthesis,supporting_evidence
+A. thaliana,Plantae,5,5,5.0,Receptor-like kinases / NBS-LRR,610,Shiu & Bleecker 2001 PNAS 98:10763-10768,curated_synthesis,supporting_evidence
+D. discoideum,Amoebozoa,4,3,3.5,Polyketide synthases / ABC transporters,40,Eichinger et al. 2005 Nature 435:43-57,curated_synthesis,supporting_evidence
+S. pombe,Fungi,3,3,3.0,Protein kinases,100,Wood et al. 2002 Nature 415:871-880,curated_synthesis,supporting_evidence
+P. aeruginosa,Bacteria,4,3,3.5,Two-component systems,120,Stover et al. 2000 Nature 406:959-964,curated_synthesis,supporting_evidence
+O. sativa,Plantae,6,5,5.5,NBS-LRR resistance genes,500,Zhou et al. 2004 Mol Genet Genomics 271:402-415,curated_synthesis,supporting_evidence
+D. rerio,Actinopterygii,6,5,5.5,Hox clusters / Odorant receptors,50,Amores et al. 1998 Science 282:1711-1714,curated_synthesis,supporting_evidence
+S. solfataricus,Crenarchaeota,3,2,2.5,Glycosyl hydrolases,30,She et al. 2001 PNAS 98:7835-7840,curated_synthesis,supporting_evidence
+M. jannaschii,Euryarchaeota,2,2,2.0,Methanogenesis enzymes,15,Bult et al. 1996 Science 273:1058-1073,curated_synthesis,supporting_evidence
+H. salinarum,Euryarchaeota,3,2,2.5,Halobacterial transducers,18,Ng et al. 2000 PNAS 97:12176-12181,curated_synthesis,supporting_evidence
+F. albicollis,Aves,4,3,3.5,Protein kinases,130,Smeds et al. 2016 Genome Res 26:1158-1168,curated_synthesis,supporting_evidence
+B. floridae,Cephalochordata,5,5,5.0,TLR superfamily,72,Huang et al. 2008 J Immunol 180:6183-6191,curated_synthesis,supporting_evidence

@@ -1,0 +1,15 @@
+check_name,description,hard_fail,result,details
+evidence_mode_all_csvs,All 13 raw CSVs have evidence_mode column with no blank values,yes,PASS,All 13 CSVs have evidence_mode populated
+computational_role_all_csvs,All 13 raw CSVs have computational_role column with no blank values,yes,PASS,All 13 CSVs have computational_role populated
+confirmed_families_authority_file,confirmed_deep_families.csv has authority_file = yes on all rows,yes,PASS,All 6 rows have authority_file = yes
+organism_map_authority_file,organism_family_map.csv has authority_file = yes on all rows,yes,PASS,All 16 rows have authority_file = yes
+source_registry_exists,data/raw/source_registry.csv exists with >= 50 rows,yes,PASS,103 sources registered
+time_budget_evidence_coverage,time_budget_evidence.csv exists and covers all organisms in time_budgets.csv,yes,PASS,All 20 organisms covered
+time_evidence_matrix_exists,data/raw/time_evidence_matrix.csv exists with >= 25 rows,yes,PASS,31 field-level evidence rows
+depth_evidence_t3req_coverage,depth_evidence.csv exists and covers all 6 T3req gene families,yes,PASS,All 6 T3req families covered (26 total rows)
+wgd_derivation_notes,wgd_adjusted_d.csv has wgd_adjustment_derivation populated on all rows,yes,PASS,All 15 rows have derivation notes
+cross_domain_provenance_cols,cross_domain_temporal.csv has D_evidence_mode and T_derivation_note columns,no,PASS,All provenance columns present; 26 rows
+d_distributions_provenance,d_distributions.csv has count_definition and source_id populated,no,PASS,All provenance columns present; 3 organisms
+dynamic_sources_access_date,"Dynamic database sources (TimeTree, Ensembl) have access_date in source_registry",yes,PASS,"All dynamic sources ({'ensembl_compara', 'timetree_db'}) have access_date"
+tem_source_ids_resolve,All source_ids in time_evidence_matrix.csv resolve to source_registry.csv,no,PASS,All source_ids in TEM resolve to registry
+registry_doi_url_coverage,source_registry.csv has >= 20 rows with doi or url populated,no,PASS,95/103 registry rows have doi or url

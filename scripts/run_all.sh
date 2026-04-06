@@ -35,9 +35,14 @@ echo "Step 5: Running validation checks..."
 python3 validate.py
 echo ""
 
+echo "Step 6: Running source citation validation..."
+python3 validate_sources.py
+echo ""
+
 echo "============================================================="
 echo "Replication complete. Output files:"
 echo "  data/processed/ - All computed data (master_scorecard.csv + 5 others)"
 echo "  figures/         - All figures (8 PNGs)"
 echo "  docs/           - Supplementary tables DOCX"
+echo "  docs/SOURCE_VERIFICATION_SUMMARY.md - Citation audit summary"
 echo "============================================================="

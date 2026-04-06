@@ -1,21 +1,21 @@
-system,category,D_observed,limiting_mechanism,F15_verdict,primary_citation
-Simple tandem repeats (microsatellites),BIO,1,No duplication-divergence; slippage only,T2ok,"Ellegren 2004 Nat Rev Genet 5:435-445"
-tRNA gene families (bacteria),BIO,1-2,Gene conversion homogenizes; dosage not hierarchy,T2ok,"Dong et al. 1996 J Mol Biol 260:649-663"
-SINEs in bacteria,BIO,0,Mechanism absent in prokaryotes,Tna,"Kramerov & Vassetzky 2011 WIREs RNA 2:772-786"
-M. tuberculosis PE/PPE families,BIO,2-3,Closed pan-genome; tandem duplication only,T2ok,"Gey van Pittius et al. 2006 BMC Evol Biol 6:95"
-Somatic VDJ recombination products,IMMUNE,3,Programmed mechanism; fixed depth ceiling,T2ok,"Tonegawa 1983 Nature 302:575-581"
-CRISPR spacer arrays,IMMUNE,1,Linear prepending; no nesting possible,T2ok,"Barrangou et al. 2007 Science 315:1709-1712"
-Buchnera aphidicola,EXIT,0-1,Mullers ratchet; no duplication operator,Tna,"Shigenobu et al. 2000 Nature 407:81-86"
-Carsonella ruddii,EXIT,0,Extreme reduction; 160 kb genome,Tna,"Nakabachi et al. 2006 Science 314:267"
-Hodgkinia cicadicola,EXIT,0,Extreme reduction; genome fission,Tna,"McCutcheon et al. 2009 PLoS Genet 5:e1000565"
-Tremblaya princeps,EXIT,0,Extreme reduction; 110 genes,Tna,"McCutcheon & von Dohlen 2011 Curr Biol 21:1366-1372"
-CPR bacteria,BOUNDARY,1-2,Reductive episymbiosis,T2ok,"Brown et al. 2015 Nature 523:208-211"
-Cancer SCNA nesting,SOMATIC,2-3,Compressed T (~decades); dosage constraint,T2ok,"Zack et al. 2013 Nat Genet 45:1134-1140"
-Normal tissue clonal expansion,SOMATIC,1-2,Homeostatic suppression,T2ok,"Martincorena et al. 2015 Science 348:880-886"
-TCR clonotype tree depth,IMMUNE,1-2,No SHM; compressed T,T2ok,"Robins et al. 2009 Blood 114:4099-4107"
-B cell affinity maturation,IMMUNE,2-3,Compressed T (weeks); affinity ceiling,T2ok,"Victora & Nussenzweig 2012 Annu Rev Immunol 30:429-457"
-Baby name families,ECON,1-2,Single-step derivation not recursive nesting,T2ok,"Hahn & Bentley 2003 Proc R Soc B 270:S120-S123"
-Dog breed lineages,ECON,2-3,Artificial selection 200 yr; shallow,T2ok,"Parker et al. 2017 Cell Reports"
-Proverbs (oral tradition),LANG,1-2,Flat structure; no recursive nesting,T2ok,"Mieder 2004 Proverbs: A Handbook"
-Regular expressions,COMP,2-3,Non-recursive by definition (Chomsky Type 3),T2ok,"Hopcroft Motwani Ullman Introduction to Automata Theory"
-Finite automata,COMP,1,Flat state space by definition,Tna,"Hopcroft Motwani Ullman"
+system,category,D_observed,limiting_mechanism,F15_verdict,primary_citation,evidence_mode,computational_role
+Simple tandem repeats (microsatellites),BIO,1,No duplication-divergence; slippage only,T2ok,Ellegren 2004 Nat Rev Genet 5:435-445,curated_synthesis,supporting_evidence
+tRNA gene families (bacteria),BIO,1-2,Gene conversion homogenizes; dosage not hierarchy,T2ok,Dong et al. 1996 J Mol Biol 260:649-663,curated_synthesis,supporting_evidence
+SINEs in bacteria,BIO,0,Mechanism absent in prokaryotes,Tna,Kramerov & Vassetzky 2011 WIREs RNA 2:772-786,curated_synthesis,supporting_evidence
+M. tuberculosis PE/PPE families,BIO,2-3,Closed pan-genome; tandem duplication only,T2ok,Gey van Pittius et al. 2006 BMC Evol Biol 6:95,curated_synthesis,supporting_evidence
+Somatic VDJ recombination products,IMMUNE,3,Programmed mechanism; fixed depth ceiling,T2ok,Tonegawa 1983 Nature 302:575-581,curated_synthesis,supporting_evidence
+CRISPR spacer arrays,IMMUNE,1,Linear prepending; no nesting possible,T2ok,Barrangou et al. 2007 Science 315:1709-1712,curated_synthesis,supporting_evidence
+Buchnera aphidicola,EXIT,0-1,Mullers ratchet; no duplication operator,Tna,Shigenobu et al. 2000 Nature 407:81-86,curated_synthesis,supporting_evidence
+Carsonella ruddii,EXIT,0,Extreme reduction; 160 kb genome,Tna,Nakabachi et al. 2006 Science 314:267,curated_synthesis,supporting_evidence
+Hodgkinia cicadicola,EXIT,0,Extreme reduction; genome fission,Tna,McCutcheon et al. 2009 PLoS Genet 5:e1000565,curated_synthesis,supporting_evidence
+Tremblaya princeps,EXIT,0,Extreme reduction; 110 genes,Tna,McCutcheon & von Dohlen 2011 Curr Biol 21:1366-1372,curated_synthesis,supporting_evidence
+CPR bacteria,BOUNDARY,1-2,Reductive episymbiosis,T2ok,Brown et al. 2015 Nature 523:208-211,curated_synthesis,supporting_evidence
+Cancer SCNA nesting,SOMATIC,2-3,Compressed T (~decades); dosage constraint,T2ok,Zack et al. 2013 Nat Genet 45:1134-1140,curated_synthesis,supporting_evidence
+Normal tissue clonal expansion,SOMATIC,1-2,Homeostatic suppression,T2ok,Martincorena et al. 2015 Science 348:880-886,curated_synthesis,supporting_evidence
+TCR clonotype tree depth,IMMUNE,1-2,No SHM; compressed T,T2ok,Robins et al. 2009 Blood 114:4099-4107,curated_synthesis,supporting_evidence
+B cell affinity maturation,IMMUNE,2-3,Compressed T (weeks); affinity ceiling,T2ok,Victora & Nussenzweig 2012 Annu Rev Immunol 30:429-457,curated_synthesis,supporting_evidence
+Baby name families,ECON,1-2,Single-step derivation not recursive nesting,T2ok,Hahn & Bentley 2003 Proc R Soc B 270:S120-S123,curated_synthesis,supporting_evidence
+Dog breed lineages,ECON,2-3,Artificial selection 200 yr; shallow,T2ok,Parker et al. 2017 Cell Reports,curated_synthesis,supporting_evidence
+Proverbs (oral tradition),LANG,1-2,Flat structure; no recursive nesting,T2ok,Mieder 2004 Proverbs: A Handbook,curated_synthesis,supporting_evidence
+Regular expressions,COMP,2-3,Non-recursive by definition (Chomsky Type 3),T2ok,Hopcroft Motwani Ullman Introduction to Automata Theory,curated_synthesis,supporting_evidence
+Finite automata,COMP,1,Flat state space by definition,Tna,Hopcroft Motwani Ullman,curated_synthesis,supporting_evidence

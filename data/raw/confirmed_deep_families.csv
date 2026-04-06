@@ -1,7 +1,7 @@
-family,confirmed_t3req,organism_context,T_source_organism,D_source,citation,rationale
-Protein kinases,yes,H. sapiens,H. sapiens,deep_paralog_families.csv,"Manning et al. 2002",D=8 gc=7.4 Tier 1
-Amphioxus TLR,yes,B. floridae,B. floridae,deep_paralog_families.csv,"Huang et al. 2008",D=9 gc=9.0 Tier 1 zero WGD
-GPCR superfamily,yes,H. sapiens,H. sapiens,deep_paralog_families.csv,"Fredriksson et al. 2003",D=7-8 gc≈11 Tier 2
-Zinc finger TFs (KRAB-ZF),yes,H. sapiens,H. sapiens,deep_paralog_families.csv,"Imbeault et al. 2017",D=7-8 gc≈11 Tier 2
-Olfactory receptors,yes,H. sapiens,H. sapiens,deep_paralog_families.csv,"Niimura & Nei 2003",D=6-7 gc≈18 Tier 3
-Rice NBS-LRR,yes,O. sativa,O. sativa,organism-specific,"Zhou et al. 2004",D=5.5 gc≈31 Tier 3 rice lineage
+family,confirmed_t3req,organism_context,T_source_organism,D_source,citation,rationale,evidence_mode,computational_role,authority_file
+Protein kinases,yes,H. sapiens,H. sapiens,deep_paralog_families.csv,Manning et al. 2002,D=8 gc=7.4 Tier 1,curated_synthesis,executable_input,yes
+Amphioxus TLR,yes,B. floridae,B. floridae,deep_paralog_families.csv,Huang et al. 2008,D=9 gc=9.0 Tier 1 zero WGD,curated_synthesis,executable_input,yes
+GPCR superfamily,yes,H. sapiens,H. sapiens,deep_paralog_families.csv,Fredriksson et al. 2003,D=7-8 gc≈11 Tier 2,curated_synthesis,executable_input,yes
+Zinc finger TFs (KRAB-ZF),yes,H. sapiens,H. sapiens,deep_paralog_families.csv,Imbeault et al. 2017,D=7-8 gc≈11 Tier 2,curated_synthesis,executable_input,yes
+Olfactory receptors,yes,H. sapiens,H. sapiens,deep_paralog_families.csv,Niimura & Nei 2003,D=6-7 gc≈18 Tier 3,curated_synthesis,executable_input,yes
+Rice NBS-LRR,yes,O. sativa,O. sativa,organism-specific,Zhou et al. 2004,D=5.5 gc≈31 Tier 3 rice lineage,curated_synthesis,executable_input,yes

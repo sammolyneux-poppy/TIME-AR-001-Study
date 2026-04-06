@@ -1,13 +1,13 @@
-rank,family,D_depth,members_human,deepest_split_age,duplication_mode,phylo_method,primary_citation
-1,Protein kinases,8,518,1.5-2.0 Gya,Segmental + tandem,ML,"Manning et al. 2002 Science 298:1912-1934"
-2,GPCR superfamily,7.5,800,>1.0 Gya,Mixed (tandem for ORs),ML,"Fredriksson et al. 2003 Mol Pharmacol 63:1256-1272"
-3,Zinc finger TFs (KRAB-ZF),7.5,800,800+ Mya (C2H2 root),Tandem (chr19 clusters),ML/Bayesian,"Imbeault et al. 2017 Nature 543:550-554"
-4,Olfactory receptors,6.5,800-1000,450-500 Mya,Tandem,ML,"Niimura & Nei 2003 PNAS 100:12235-12240"
-5,Homeodomain TFs,6.5,250,>1.0 Gya,Mixed + 2R WGD,ML,"Holland et al. 2007 BMC Biol 5:47"
-6,Cytochrome P450,6.5,57,>1.5 Gya,Tandem,ML/Bayesian,"Nelson et al. 2009 Hum Genomics 4:59-65"
-7,Immunoglobulin SF,6.5,765,>600 Mya,Domain shuffling + tandem,ML/Bayesian,"Harpaz & Chothia 1994 JMB 238:528-539"
-8,Hox clusters,5.5,39,>600 Mya,Tandem + 2R WGD,ML/Bayesian,"Amores et al. 1998 Science 282:1711-1714"
-9,bHLH TFs,5.5,118,>600 Mya,Segmental + 2R WGD,Bayesian,"Simionato et al. 2007 BMC Evol Biol 7:33"
-10,ABC transporters,5,48,>2.0 Gya,Ancient segmental,ML,"Dean et al. 2001 Genome Res 11:1156-1166"
-11,Amphioxus TLR,9,72 (amphioxus),>550 Mya,Tandem,ML/Bayesian,"Huang et al. 2008 J Immunol 180:6183-6191; Dishaw et al. 2012"
-12,Rice NBS-LRR,5.5,500 (rice),70-90 Mya,Tandem,ML,"Zhou et al. 2004 Mol Genet Genomics 271:402-415"
+rank,family,D_depth,members_human,deepest_split_age,duplication_mode,phylo_method,primary_citation,evidence_mode,computational_role
+1,Protein kinases,8,518,1.5-2.0 Gya,Segmental + tandem,ML,Manning et al. 2002 Science 298:1912-1934,direct_extract,supporting_evidence
+2,GPCR superfamily,7.5,800,>1.0 Gya,Mixed (tandem for ORs),ML,Fredriksson et al. 2003 Mol Pharmacol 63:1256-1272,direct_extract,supporting_evidence
+3,Zinc finger TFs (KRAB-ZF),7.5,800,800+ Mya (C2H2 root),Tandem (chr19 clusters),ML/Bayesian,Imbeault et al. 2017 Nature 543:550-554,direct_extract,supporting_evidence
+4,Olfactory receptors,6.5,800-1000,450-500 Mya,Tandem,ML,Niimura & Nei 2003 PNAS 100:12235-12240,direct_extract,supporting_evidence
+5,Homeodomain TFs,6.5,250,>1.0 Gya,Mixed + 2R WGD,ML,Holland et al. 2007 BMC Biol 5:47,direct_extract,supporting_evidence
+6,Cytochrome P450,6.5,57,>1.5 Gya,Tandem,ML/Bayesian,Nelson et al. 2009 Hum Genomics 4:59-65,direct_extract,supporting_evidence
+7,Immunoglobulin SF,6.5,765,>600 Mya,Domain shuffling + tandem,ML/Bayesian,Harpaz & Chothia 1994 JMB 238:528-539,direct_extract,supporting_evidence
+8,Hox clusters,5.5,39,>600 Mya,Tandem + 2R WGD,ML/Bayesian,Amores et al. 1998 Science 282:1711-1714,direct_extract,supporting_evidence
+9,bHLH TFs,5.5,118,>600 Mya,Segmental + 2R WGD,Bayesian,Simionato et al. 2007 BMC Evol Biol 7:33,direct_extract,supporting_evidence
+10,ABC transporters,5,48,>2.0 Gya,Ancient segmental,ML,Dean et al. 2001 Genome Res 11:1156-1166,direct_extract,supporting_evidence
+11,Amphioxus TLR,9,72 (amphioxus),>550 Mya,Tandem,ML/Bayesian,Huang et al. 2008 J Immunol 180:6183-6191; Dishaw et al. 2012,direct_extract,supporting_evidence
+12,Rice NBS-LRR,5.5,500 (rice),70-90 Mya,Tandem,ML,Zhou et al. 2004 Mol Genet Genomics 271:402-415,direct_extract,supporting_evidence
