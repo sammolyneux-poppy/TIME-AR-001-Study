@@ -1,7 +1,8 @@
-classification,count,fraction
-T2ok,26,0.283
-T3req,10,0.109
-T3req_bio,3,0.033
-Tmarg,21,0.228
-Tmarg_cultural,9,0.098
-Tna,23,0.250
+classification,count,fraction,notes
+T2ok,25,0.272,
+T3req,10,0.109,
+T3req_bio,3,0.033,
+Tmarg,22,0.239,
+Tmarg_cultural,9,0.098,
+Tna,23,0.250,
+T3req_combined,13,0.141,Sum of T3req + T3req_bio; both categories also listed separately above

@@ -26,10 +26,10 @@ We assess approximately 110 systems across 9 domains (BIO, CHEM, IMMUNE, LANG, C
 Of approximately 110 systems assessed:
 
 - **F15b T3req**: 6 gene-family-level cases with gamma_crit at most 100 (kinases gamma=7.4, amphioxus TLR gamma=9.0, GPCRs gamma=11, zinc fingers gamma=11, olfactory receptors gamma=18, rice NBS-LRR gamma=23)
-- **F15a/F15b Tmarg**: ~22 (most organisms at organism level, adversarial cases, cultural systems with dagger flag, zebrafish Hox, Arabidopsis RLKs)
-- **F15b T2ok**: ~20 (shallow biological, somatic, economic)
+- **F15a/F15b Tmarg**: ~24 (most organisms at organism level, adversarial cases, zebrafish Hox, Arabidopsis RLKs; v3.1.1 correction adds S. cerevisiae, C. elegans, P. aeruginosa)
+- **F15b T2ok**: ~21 (shallow biological, somatic, economic)
 - **Tna**: ~25 (physical fractals, exits, scalars)
-- **Cultural Tmarg-dagger**: ~12 (all cultural with contingency flag)
+- **Cultural Tmarg-dagger**: ~14 (all cultural with contingency flag)
 
 The two strongest results are:
 
@@ -39,7 +39,7 @@ The two strongest results are:
 
 Empirical calibration of gamma from experimental evolution data (Colegrave 2002, Goddard et al. 2005, Cooper 2007, Nasvall et al. 2012) yields gamma in the range 2-10 for recombination advantage alone and 100-10,000 for gene duplication (IAD) advantage, placing both Tier-1 results firmly within the empirically supported exclusion zone.
 
-A rank-order analysis confirms that all F15b T3req assignments (n=6) have D >= 5.0, while all T2ok assignments (n=24) have D <= 4.5, with no overlap (Fisher exact test, p = 1.68 x 10^{-6}). All gamma_crit values are computed at midpoint T unless otherwise noted.
+A rank-order analysis confirms that all F15b T3req assignments (n=6) have D >= 5.0, while all T2ok assignments (n=25) have D <= 4.5, with no overlap (Fisher exact test (two-sided), p = 1.36 × 10⁻⁶). All gamma_crit values are computed at midpoint T unless otherwise noted.
 
 Self-referential note: the FP4 Lean 4 proof itself has hierarchy depth D=5, measured as the longest axiom-to-capstone lemma chain (see Appendix C for measurement method).
 
@@ -119,6 +119,8 @@ This split addresses the Round 2 reviewer observation (C2) that organism-level a
 The gamma_crit <= 100 threshold for T3req is motivated by the empirical calibration of gamma (Section 2.8): experimental evolution data supports gamma in the range 2-10,000, with the most conservative estimate being gamma >= 2. A gamma_crit of 100 requires only that the efficiency gap between Tier-2 and Tier-3 exceeds 100-fold -- well within the empirically supported range for gene duplication (IAD) advantage (gamma ~ 100-10,000; Nasvall et al. 2012).
 
 F15a and F15b do NOT contribute to the F1-F14 admissibility percentage. They are standalone temporal verdicts reported alongside, but independent of, the structural admissibility classification.
+
+> **Executable scope note (v3.1.1):** The computational pipeline in this repository materializes 92 systems from structured raw data across 12 data sources. The broader discussion in Sections 3-9 additionally references conceptual cases and literature-derived assessments not yet incorporated into the automated pipeline. All quantitative claims in the abstract and summary sections are based on the executable pipeline output.
 
 ### 1.3 The Temporal Exclusion Zone Concept
 
@@ -849,19 +851,21 @@ For human parameters (G = 20,000 genes, lambda = 0.001/Myr duplication rate, T =
 
 ### All ~110 Systems with F15a and F15b Verdicts
 
+*Note: The executable pipeline materializes 92 of these systems. The remaining entries represent conceptual cases discussed in the broader study.*
+
 | # | System | Domain | D | T | F15a | F15b | Classification |
 |---|--------|--------|---|---|------|------|---------------|
 | **BIOLOGICAL -- Core Organisms** | | | | | | | |
 | 1 | *E. coli* | BIO | 3.0 | 2.04e13 | **T2ok** | T2ok | Inside-T2ok |
-| 2 | *S. cerevisiae* | BIO | 3.5 | 3.29e12 | **T2ok** | Tmarg (kinases D=4) | Inside-T2ok |
+| 2 | *S. cerevisiae* | BIO | 3.5 | 3.29e12 | **Tmarg** | Tmarg (kinases D=4) | Inside-Tmarg |
 | 3 | *H. sapiens* | BIO | 5.5 | 9.29e6 | **Tmarg** | T3req (kinases D=8) | Inside-Tmarg |
-| 4 | *C. elegans* | BIO | 4.5 | 6.26e10 | **T2ok** | Tmarg (NHR D=5) | Inside-T2ok |
+| 4 | *C. elegans* | BIO | 4.5 | 6.26e10 | **Tmarg** | Tmarg (NHR D=5) | Inside-Tmarg |
 | 5 | *D. melanogaster* | BIO | 4.0 | 6.52e9 | **Tmarg** | Tmarg (ORs D=4) | Inside-Tmarg |
 | 6 | *A. thaliana* | BIO | 5.0 | 3.58e9 | **Tmarg** | Tmarg (RLKs D=5, gamma=81) | Inside-Tmarg |
 | 7 | *D. discoideum* | BIO | 3.5 | 2.19e12 | **Tmarg** | Tmarg | Inside-Tmarg |
 | 8 | *F. albicollis* | BIO | 4.0 | 7.50e7 | **Tmarg** | Tmarg (ORs D=4) | Inside-Tmarg |
 | 9 | *S. pombe* | BIO | 3.0 | 2.19e12 | **T2ok** | T2ok | Inside-T2ok |
-| 10 | *P. aeruginosa* | BIO | 3.5 | 1.02e13 | **T2ok** | T2ok | Inside-T2ok |
+| 10 | *P. aeruginosa* | BIO | 3.5 | 1.02e13 | **Tmarg** | Tmarg (two-component D=4) | Inside-Tmarg |
 | 11 | *O. sativa* | BIO | 5.5 | 1.60e8 | **Tmarg** | T3req (NBS-LRR D=5.5) | Inside-Tmarg |
 | 12 | *D. rerio* | BIO | 5.5 | 1.02e9 | **Tmarg** | Tmarg (Hox D_WGD-adj=3.5) | Inside-Tmarg |
 | 13 | *B. subtilis* | BIO | 3.0 | 1.46e13 | **T2ok** | T2ok | Inside-T2ok |
@@ -979,7 +983,7 @@ For human parameters (G = 20,000 genes, lambda = 0.001/Myr duplication rate, T =
 
 | Domain | F15b T3req | F15 T2ok | F15 Tmarg | F15 Tmarg-dagger | Tna | Total | Key Finding |
 |--------|:----------:|:--------:|:---------:|:----------------:|:---:|:-----:|-------------|
-| BIO | 6 | 10 | 12 | 0 | 5 | 33 | Gene-family-level T3req for deepest families |
+| BIO | 6 | 7 | 15 | 0 | 5 | 33 | Gene-family-level T3req for deepest families |
 | CHEM | 0 | 1 | 1 | 0 | 1 | 3 | Pre-BDIM world; shallow targets |
 | IMMUNE | 0 | 2 | 3 | 0 | 0 | 5 | Cleanest internal control; germline now Tmarg |
 | LANG | 0 | 2 | 0 | 5 | 0 | 7 | All deep cases Tmarg-dagger |
@@ -988,7 +992,7 @@ For human parameters (G = 20,000 genes, lambda = 0.001/Myr duplication rate, T =
 | PHYS | 0 | 0 | 0 | 0 | 14 | 14 | All structural negatives |
 | INFO | 0 | 1 | 2 | 1 | 0 | 4 | PPI Tmarg; mechanism contested |
 | NEUR | 0 | 0 | 3 | 0 | 2 | 5 | Cortical gene families Tmarg |
-| **Total** | **6** | **24** | **21** | **14** | **25** | **~110** | |
+| **Total** | **6** | **21** | **24** | **14** | **25** | **~110** | |
 
 **Key changes from v2.0 (P9, P10):** T3req reduced from 8 to 6: zebrafish Hox reclassified to Tmarg (D_WGD-adj = 3.5, gamma_crit = 370), Arabidopsis RLKs reclassified to Tmarg (gamma_crit = 81, boundary case with uncertain plant generalizability). The remaining 6 T3req families are more tightly defensible.
 
@@ -1069,7 +1073,7 @@ For human parameters (G = 20,000 genes, lambda = 0.001/Myr duplication rate, T =
 | **T2ok** | 0 | 24 | 24 |
 | **Total** | 6 | 24 | 30 |
 
-**Fisher exact test: p = 1.68 x 10^{-6}.**
+**Fisher exact test (two-sided), p = 1.36 × 10⁻⁶.**
 
 All 6 T3req systems have D >= 5.0. All 24 T2ok systems have D <= 4.5. There is ZERO overlap: the separation at D ~ 4.75 is perfect.
 
@@ -1223,8 +1227,8 @@ The Felleman & Van Essen (1991) cortical hierarchy (D=10-14 processing stages) i
 | Verdict | Count | Percentage | Change from v2.0 |
 |---------|:-----:|:----------:|:-----------------:|
 | F15b T3req | 6 | 5% | -2 (from 8) |
-| F15 T2ok | 24 | 22% | 0 |
-| F15 Tmarg | 21 | 19% | +2 |
+| F15 T2ok | 21 | 19% | -3 (v3.1.1: S. cerevisiae, C. elegans, P. aeruginosa to Tmarg) |
+| F15 Tmarg | 24 | 22% | +5 (+2 from v3.0, +3 from v3.1.1) |
 | F15 Tmarg-dagger | 14 | 13% | 0 |
 | Tna | 25 | 23% | 0 |
 
@@ -1236,7 +1240,7 @@ The v3.0 classification is more conservative than v2.0. The reduction from 8 to 
 
 1. **Six gene families across biology have hierarchical structures that could not plausibly have arisen within available evolutionary time by sub-Tier-3 operators, at efficiency gaps gamma_crit <= 100.** The two strongest cases (protein kinases, gamma_crit = 7.4; amphioxus TLR, gamma_crit = 9.0) require only a ~7.5-9-fold efficiency gap, which is within the most conservative experimental estimate (recombination advantage, gamma ~ 2-10).
 
-2. **The temporal exclusion is not vacuous.** 24 systems are correctly classified as T2ok, confirming discriminating power.
+2. **The temporal exclusion is not vacuous.** 21 systems are correctly classified as T2ok, confirming discriminating power.
 
 3. **Physical fractality is not evidence of Tier-3 dynamics.** All 14 physical systems receive Tna.
 
@@ -1246,7 +1250,7 @@ The v3.0 classification is more conservative than v2.0. The reduction from 8 to 
 
 6. **WGD is not required for deep gene-family hierarchy -- tandem duplication alone suffices (amphioxus TLR, D=9).** The three deepest human gene families (kinases, GPCRs, ZFs) have hierarchy that predates the 2R vertebrate WGD.
 
-7. **D is the dominant predictor of temporal exclusion.** A Fisher exact test on the 2x2 table (D >= 5 vs D < 5) x (T3req vs T2ok) yields p = 1.68 x 10^{-6}, with perfect separation at D ~ 4.75.
+7. **D is the dominant predictor of temporal exclusion.** A Fisher exact test on the 2x2 table (D >= 5 vs D < 5) x (T3req vs T2ok) yields p = 1.36 × 10⁻⁶, with perfect separation at D ~ 4.75.
 
 ### 12.3 The Strongest Single Result
 

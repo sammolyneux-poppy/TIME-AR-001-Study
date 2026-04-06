@@ -1,0 +1,17 @@
+organism,family,D_family,T_family,notes
+H. sapiens,Kinases,8.0,,Uses organism T_midpoint; maps to Protein kinases in deep_paralog_families
+D. rerio,Hox clusters,5.5,,WGD-adjusted via wgd_adjusted_d.csv; uses organism T_midpoint
+O. sativa,NBS-LRR,5.5,,Uses organism T_midpoint
+A. thaliana,RLKs,5.0,,Uses organism T_midpoint
+C. elegans,NHR,5.0,,Uses organism T_midpoint
+D. melanogaster,ORs,4.0,,Uses organism T_midpoint
+E. coli,ABC transporters,3.0,,Uses organism T_midpoint
+S. cerevisiae,Kinases,4.0,,Uses organism T_midpoint
+P. aeruginosa,Two-component,4.0,,Uses organism T_midpoint
+S. pombe,Kinases,3.0,,Uses organism T_midpoint
+F. albicollis,Kinases,4.0,,Uses organism T_midpoint
+D. discoideum,PKS,4.0,,Uses organism T_midpoint
+S. solfataricus,GH,3.0,,Uses organism T_midpoint
+M. jannaschii,MCR,2.0,,Uses organism T_midpoint
+H. salinarum,Htr,3.0,,Uses organism T_midpoint
+B. floridae,TLR,9.0,,Uses organism T_midpoint

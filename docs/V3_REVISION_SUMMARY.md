@@ -12,7 +12,7 @@
 **New Section 2.9.** Adds explicit bridge connecting the Lean theorem (about genome length capacity) to the biological argument (about hierarchy depth search cost). States: each hierarchy level requires discovery of at least one novel functional sequence; the search to find each functional paralog scales exponentially in sequence space. Uses Manning 2002 kinase example (518 kinases, each a distinct functional sequence). Explicitly qualified: "This bridge is biological, not formal."
 
 ### P2 -- Fisher Exact Test Replaces Logistic Regression
-**Sections 9.5, Abstract, 10.4, 12.2.** All references to "logistic regression" and "perfect separation" removed. Replaced with 2x2 contingency table (D >= 5 vs D < 5) x (T3req vs T2ok): 6 T3req all at D >= 5.0, 24 T2ok all at D <= 4.5, Fisher exact test p < 10^{-6}. Abstract updated accordingly.
+**Sections 9.5, Abstract, 10.4, 12.2.** All references to "logistic regression" and "perfect separation" removed. Replaced with 2x2 contingency table (D >= 5 vs D < 5) x (T3req vs T2ok): 6 T3req all at D >= 5.0, 25 T2ok all at D <= 4.5, Fisher exact test (two-sided), p = 1.36 × 10⁻⁶. Abstract updated accordingly.
 
 ### P3 -- Amphioxus TLR gamma_crit Corrected to 9.0
 **Sections 2.1.2, 2.8.3, 4.1, 9.4, Abstract, 12.4.** Arithmetic corrected: (4.0 x 10^8)^(1/9) = e^(19.81/9) = e^2.201 = 9.0, not 15. Amphioxus TLR elevated to Tier 1 alongside kinases. New Section 12.4 highlights this as the second Tier-1 result.

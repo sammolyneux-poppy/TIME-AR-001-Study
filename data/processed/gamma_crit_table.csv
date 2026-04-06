@@ -3,28 +3,28 @@ Programming language families,6.5,10000.0,4.1,Tmarg_cultural
 Compiler IR hierarchies,8.5,1000000.0,5.1,Tmarg_cultural
 Legal precedent chains,12.5,1400000000.0,5.4,Tmarg_cultural
 Linux kernel (module nesting),8.0,2500000.0,6.3,Tmarg_cultural
-Protein kinases,8.0,9300000.0,7.4,T3req
+Protein kinases,8.0,9290000.0,7.4,T3req
+GPCR superfamily,7.5,9290000.0,8.5,T3req
+Zinc finger TFs (KRAB-ZF),7.5,9290000.0,8.5,T3req
 Amphioxus TLR,9.0,400000000.0,9.0,T3req
 Chess opening trees (branching),10.0,10000000000.0,10.0,Tmarg_cultural
-GPCR superfamily,7.5,9300000.0,11.0,T3req
-Zinc finger TFs (KRAB-ZF),7.5,9300000.0,11.0,T3req
-Homeodomain TFs,6.5,9300000.0,11.8,Tmarg
-Cytochrome P450,6.5,9300000.0,11.8,Tmarg
-Immunoglobulin SF,6.5,9300000.0,11.8,Tmarg
+Olfactory receptors,6.5,9290000.0,11.8,T3req
+Cytochrome P450,6.5,9290000.0,11.8,Tmarg
+Immunoglobulin SF,6.5,9290000.0,11.8,Tmarg
 NR superfamily,6.0,9300000.0,14.5,Tmarg
-Olfactory receptors,6.5,9300000.0,18.0,T3req
 H. sapiens,5.5,9290000.0,18.5,T3req
-Hox clusters,5.5,9300000.0,18.5,Tmarg
-bHLH TFs,5.5,9300000.0,18.5,Tmarg
+Homeodomain TFs,6.5,9290000.0,18.5,Tmarg
 Patent citation genealogy,5.5,10000000.0,18.7,Tmarg_cultural
 Mathematical notation,7.0,1000000000.0,19.3,Tmarg_cultural
-Rice NBS-LRR,5.5,160000000.0,23.0,T3req
 FGF family,5.0,9300000.0,24.8,Tmarg
 Wnt family,5.0,9300000.0,24.8,Tmarg
 Eph/ephrin family,5.0,9300000.0,24.8,Tmarg
 Musical composition forms,5.5,100000000.0,28.5,Tmarg_cultural
 O. sativa,5.5,160000000.0,31.0,T3req
+Rice NBS-LRR,5.5,160000000.0,31.0,T3req
 Brain cortical hierarchy (GENE-FAMILY BASIS),6.0,1000000000.0,31.6,T3req_bio
+Hox clusters,5.5,9290000.0,35.4,Tmarg
+bHLH TFs,5.5,9290000.0,35.4,Tmarg
 D. rerio,5.5,1020000000.0,43.4,Tmarg
 B. floridae,5.0,400000000.0,52.5,T3req
 WWW site nesting,4.0,10000000.0,56.2,Tna
@@ -34,7 +34,7 @@ Neural cell type diversity,4.0,1000000000.0,177.8,T3req_bio
 C. elegans,4.5,62600000000.0,250.7,Tmarg
 PPI module hierarchy,5.0,1000000000000.0,251.2,T3req_bio
 D. melanogaster,4.0,6520000000.0,284.2,Tmarg
-ABC transporters,5.0,20400000000000.0,459.1,T2ok
+ABC transporters,5.0,20400000000000.0,459.1,Tmarg
 Natural language morpheme families,4.5,7000000000000.0,715.3,Tmarg_cultural
 D. discoideum,3.5,2190000000000.0,3356.1,Tmarg
 S. cerevisiae,3.5,3290000000000.0,3770.0,Tmarg

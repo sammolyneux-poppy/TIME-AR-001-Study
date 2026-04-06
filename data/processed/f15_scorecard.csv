@@ -1,17 +1,17 @@
 organism,domain,D_organism,D_family,family_name,T_midpoint,gamma_crit_organism,gamma_crit_family,F15a,F15b
-H. sapiens,Mammalia,5.5,8.0,Kinases,9290000.0,18.5,7.4,Tmarg,T3req
-D. rerio,Actinopterygii,5.5,3.5,Hox (WGD-adj D=3.5),1020000000.0,43.4,370.0,Tmarg,Tmarg
-O. sativa,Plantae,5.5,5.5,NBS-LRR,160000000.0,31.0,23.3,Tmarg,T3req
-A. thaliana,Plantae,5.0,5.0,RLKs,3580000000.0,81.4,81.4,Tmarg,Tmarg
-C. elegans,Nematoda,4.5,5.0,NHR,62600000000.0,250.7,144.3,Tmarg,Tmarg
-D. melanogaster,Insecta,4.0,4.0,ORs,6520000000.0,284.2,284.2,Tmarg,Tmarg
 E. coli,Bacteria,3.0,3.0,ABC transporters,20400000000000.0,27323.9,27323.9,T2ok,T2ok
 S. cerevisiae,Fungi,3.5,4.0,Kinases,3290000000000.0,3770.0,1346.8,Tmarg,Tmarg
-P. aeruginosa,Bacteria,3.5,4.0,Two-component,10200000000000.0,5208.9,1787.1,Tmarg,Tmarg
-S. pombe,Fungi,3.0,3.0,Kinases,2190000000000.0,12986.2,12986.2,T2ok,T2ok
-F. albicollis,Aves,3.5,4.0,Kinases,75000000.0,177.8,93.1,Tmarg,Tmarg
+H. sapiens,Mammalia,5.5,8.0,Kinases,9290000.0,18.5,7.4,Tmarg,T3req
+C. elegans,Nematoda,4.5,5.0,NHR,62600000000.0,250.7,144.3,Tmarg,Tmarg
+D. melanogaster,Insecta,4.0,4.0,ORs,6520000000.0,284.2,284.2,Tmarg,Tmarg
+A. thaliana,Plantae,5.0,5.0,RLKs,3580000000.0,81.4,81.4,Tmarg,Tmarg
 D. discoideum,Amoebozoa,3.5,4.0,PKS,2190000000000.0,3356.1,1216.5,Tmarg,Tmarg
+S. pombe,Fungi,3.0,3.0,Kinases,2190000000000.0,12986.2,12986.2,T2ok,T2ok
+P. aeruginosa,Bacteria,3.5,4.0,Two-component,10200000000000.0,5208.9,1787.1,Tmarg,Tmarg
+O. sativa,Plantae,5.5,5.5,NBS-LRR,160000000.0,31.0,31.0,Tmarg,T3req
+D. rerio,Actinopterygii,5.5,3.5,Hox clusters (WGD-adj D=3.5),1020000000.0,43.4,374.9,Tmarg,Tmarg
 S. solfataricus,Crenarchaeota,2.5,3.0,GH,6570000000000.0,133975.7,18729.3,T2ok,T2ok
 M. jannaschii,Euryarchaeota,2.0,2.0,MCR,17500000000000.0,4183300.1,4183300.1,T2ok,T2ok
 H. salinarum,Euryarchaeota,2.5,3.0,Htr,1750000000000.0,78925.1,12050.7,T2ok,T2ok
+F. albicollis,Aves,3.5,4.0,Kinases,75000000.0,177.8,93.1,Tmarg,Tmarg
 B. floridae,Cephalochordata,5.0,9.0,TLR,400000000.0,52.5,9.0,Tmarg,T3req

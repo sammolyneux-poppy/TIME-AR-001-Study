@@ -1,0 +1,5 @@
+duplicate_name,source_kept,source_dropped,reason
+Baby name families,cross_domain,shallow,Duplicate of 'Baby name families'; kept cross_domain entry (appears first in processing order)
+Dog breed lineages,cross_domain,shallow,Duplicate of 'Dog breed lineages'; kept cross_domain entry (appears first in processing order)
+Regular expressions,cross_domain,shallow,Duplicate of 'Regular expressions'; kept cross_domain entry (appears first in processing order)
+Finite automata,cross_domain,shallow,Duplicate of 'Finite automata'; kept cross_domain entry (appears first in processing order)

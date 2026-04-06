@@ -3,19 +3,38 @@
 fisher_test.py -- Reproduce the Fisher exact test from TIME-AR-001 v3.1.
 
 Verifies the claim that T3req gene families (D >= 5.0) and T2ok assignments
-(D <= 4.5) form perfectly separated groups, yielding Fisher p < 10^-6.
+(D < 5.0) form perfectly separated groups, yielding Fisher p < 10^-6.
+
+Selection criteria
+------------------
+T3req selection: verdict_final == 'T3req' AND system_type == 'deep_family'
+  Rationale: The Fisher test compares the 6 deepest gene families that require
+  Tier-3 dynamics against all systems classified as T2ok. The test asks whether
+  D >= 5.0 perfectly separates T3req from T2ok.
+
+T2ok selection: verdict_final == 'T2ok' (any system_type)
+  Rationale: All systems for which sub-Tier-3 operators are temporally sufficient.
+
+Column compatibility
+--------------------
+The master_scorecard.csv may use either new column names (verdict_final) or old
+column names (F15b). This script supports both formats, checking verdict_final
+first and falling back to F15b.
 """
 
 import csv
 import os
-import sys
 from math import factorial
 
 # ---------------------------------------------------------------------------
-# Hardcoded data from the v3.1 report
+# D threshold for the Fisher 2x2 table
 # ---------------------------------------------------------------------------
+D_THRESH = 5.0
 
-T3REQ_FAMILIES = [
+# ---------------------------------------------------------------------------
+# Hardcoded fallback data (used ONLY when master_scorecard.csv is unavailable)
+# ---------------------------------------------------------------------------
+_FALLBACK_T3REQ = [
     ("Protein kinases",       8.0),
     ("Amphioxus TLR",         9.0),
     ("GPCR superfamily",      7.5),
@@ -24,7 +43,7 @@ T3REQ_FAMILIES = [
     ("Rice NBS-LRR",          5.5),
 ]
 
-T2OK_SYSTEMS = [
+_FALLBACK_T2OK = [
     ("Antibody SHM (mammals)",            1.0),
     ("V(D)J recombination",               1.5),
     ("Ciliates (MIC->MAC)",               2.0),
@@ -85,38 +104,110 @@ def fisher_exact_manual(table):
     return odds_ratio, p
 
 
+def _parse_d_value(d_str):
+    """Parse a D value string, handling ranges like '1-2' by taking midpoint.
+
+    Returns float or None if unparseable.
+    """
+    if not d_str or d_str.strip() in ('', 'NA'):
+        return None
+    d_str = d_str.strip()
+    try:
+        # Handle ranges like "1-2", "0-1", "2-3" (but not negative numbers like "-1")
+        if '-' in d_str and not d_str.startswith('-'):
+            parts = d_str.split('-')
+            return (float(parts[0]) + float(parts[1])) / 2
+        else:
+            return float(d_str)
+    except (ValueError, IndexError):
+        return None
+
+
+def _get_verdict(row):
+    """Get the verdict from a row, supporting both old (F15b) and new (verdict_final) column names."""
+    verdict = row.get("verdict_final", "").strip()
+    if not verdict:
+        verdict = row.get("F15b", "").strip()
+    return verdict
+
+
 def load_from_master_scorecard(path):
-    """Try to load T3req and T2ok data from master_scorecard.csv."""
+    """Load T3req and T2ok data from master_scorecard.csv.
+
+    Returns (t3req_list, t2ok_list, source_file) where each list contains
+    (system, D_value) tuples.  D_value may be None for T2ok entries whose
+    D_input is missing or unparseable; those are counted as D < threshold
+    in the contingency table (justified because T2ok verdict means the
+    system does not require Tier-3 dynamics).
+
+    Raises ValueError if required columns are missing.
+    """
     t3req = []
     t2ok = []
+
     with open(path, newline='') as f:
         reader = csv.DictReader(f)
+        headers = reader.fieldnames or []
+
+        # Verify we have the columns we need
+        has_verdict = ("verdict_final" in headers) or ("F15b" in headers)
+        has_system_type = "system_type" in headers
+        has_d = "D_input" in headers
+        has_system = "system" in headers
+
+        if not (has_verdict and has_system_type and has_d and has_system):
+            missing = []
+            if not has_verdict:
+                missing.append("verdict_final/F15b")
+            if not has_system_type:
+                missing.append("system_type")
+            if not has_d:
+                missing.append("D_input")
+            if not has_system:
+                missing.append("system")
+            raise ValueError(
+                f"master_scorecard.csv missing required columns: {', '.join(missing)}"
+            )
+
         for row in reader:
-            system = row.get("system", "")
-            # Use F15b as primary verdict, fall back to F15a
-            verdict = row.get("F15b", row.get("F15a", "")).strip()
-            d_str = row.get("D_input", "")
-            # Skip rows with non-numeric D
-            try:
-                if d_str and d_str.strip() not in ('', 'NA'):
-                    # Handle ranges like "4-5" by taking midpoint
-                    if '-' in d_str and not d_str.startswith('-'):
-                        parts = d_str.split('-')
-                        d_val = (float(parts[0]) + float(parts[1])) / 2
-                    else:
-                        d_val = float(d_str)
-                else:
-                    continue
-            except (ValueError, IndexError):
+            system = row.get("system", "").strip()
+            verdict = _get_verdict(row)
+            stype = row.get("system_type", "").strip()
+            d_val = _parse_d_value(row.get("D_input", ""))
+
+            if not system or not verdict:
                 continue
-            # T3req deep families (the 6 confirmed cases)
-            stype = row.get("system_type", "")
+
+            # T3req: deep_family systems with T3req verdict
             if verdict == "T3req" and stype == "deep_family":
+                if d_val is None:
+                    print(f"  WARNING: T3req deep_family '{system}' has no parseable D_input, skipping")
+                    continue
                 t3req.append((system, d_val))
-            # ALL T2ok systems regardless of type (biological, cross-domain, etc.)
+
+            # T2ok: any system type.  Entries without D_input are included
+            # with D=None; they are placed in the D < threshold bucket
+            # because their T2ok verdict means sub-Tier-3 suffices.
             elif verdict == "T2ok":
+                if d_val is None:
+                    print(f"  NOTE: T2ok system '{system}' has no D_input; "
+                          "included as D < threshold (implicit from T2ok verdict)")
                 t2ok.append((system, d_val))
-    return t3req, t2ok
+
+    return t3req, t2ok, os.path.basename(path)
+
+
+def write_fisher_input_table(path, t3req, t2ok, source_file):
+    """Write fisher_input_table.csv for full inspectability."""
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(["system", "D", "category", "source_file"])
+        for system, d in t3req:
+            writer.writerow([system, d if d is not None else "NA", "T3req", source_file])
+        for system, d in t2ok:
+            writer.writerow([system, d if d is not None else "NA", "T2ok", source_file])
+    print(f"Fisher input table written to {path}")
 
 
 def main():
@@ -124,23 +215,44 @@ def main():
     project_dir = os.path.dirname(script_dir)
     master_path = os.path.join(project_dir, "data", "processed", "master_scorecard.csv")
     output_path = os.path.join(project_dir, "data", "processed", "fisher_test_result.csv")
+    input_table_path = os.path.join(project_dir, "data", "processed", "fisher_input_table.csv")
 
-    # Use the v3.1 authoritative hardcoded data (6 T3req families vs 24 T2ok biological systems).
-    # The Fisher test in the report is about the specific rank-order separation between
-    # deep gene families (T3req) and shallow/organism-level biological systems (T2ok).
-    # Parsing master_scorecard.csv would mix system types; hardcoded data is authoritative.
-    print("Using v3.1 authoritative data: 6 T3req deep families, 24 T2ok biological systems.")
-    t3req = T3REQ_FAMILIES
-    t2ok = T2OK_SYSTEMS
+    # -----------------------------------------------------------------------
+    # Primary path: derive Fisher input from master_scorecard.csv
+    # Fallback: hardcoded lists (with WARNING)
+    # -----------------------------------------------------------------------
+    source_file = "hardcoded_fallback"
+    try:
+        if not os.path.exists(master_path):
+            raise FileNotFoundError(f"master_scorecard.csv not found at {master_path}")
 
-    # Threshold
-    D_THRESH = 5.0
+        t3req, t2ok, source_file = load_from_master_scorecard(master_path)
+
+        if len(t3req) == 0 or len(t2ok) == 0:
+            raise ValueError(
+                f"master_scorecard.csv yielded {len(t3req)} T3req and {len(t2ok)} T2ok entries; "
+                "expected non-zero for both"
+            )
+
+        print(f"Loaded from master_scorecard.csv: {len(t3req)} T3req deep families, {len(t2ok)} T2ok systems")
+
+    except (FileNotFoundError, ValueError, KeyError) as e:
+        print(f"WARNING: Could not load from master_scorecard.csv: {e}")
+        print("WARNING: Falling back to hardcoded v3.1 data. Results may not reflect current scorecard.")
+        t3req = _FALLBACK_T3REQ
+        t2ok = _FALLBACK_T2OK
+        source_file = "hardcoded_fallback"
+
+    # Write the fisher_input_table.csv for inspectability
+    write_fisher_input_table(input_table_path, t3req, t2ok, source_file)
 
     # Build contingency table
-    t3req_above = sum(1 for _, d in t3req if d >= D_THRESH)
-    t3req_below = sum(1 for _, d in t3req if d < D_THRESH)
-    t2ok_above  = sum(1 for _, d in t2ok  if d >= D_THRESH)
-    t2ok_below  = sum(1 for _, d in t2ok  if d < D_THRESH)
+    # T2ok entries with D=None are placed in the "below threshold" bucket
+    # because their T2ok verdict means sub-Tier-3 operators suffice.
+    t3req_above = sum(1 for _, d in t3req if d is not None and d >= D_THRESH)
+    t3req_below = sum(1 for _, d in t3req if d is None or d < D_THRESH)
+    t2ok_above  = sum(1 for _, d in t2ok  if d is not None and d >= D_THRESH)
+    t2ok_below  = sum(1 for _, d in t2ok  if d is None or d < D_THRESH)
 
     table = [[t3req_above, t3req_below],
              [t2ok_above,  t2ok_below]]
@@ -148,6 +260,19 @@ def main():
     n_t3req = len(t3req)
     n_t2ok  = len(t2ok)
     total   = n_t3req + n_t2ok
+
+    # Check for perfect separation
+    if t3req_below > 0 or t2ok_above > 0:
+        print()
+        print("WARNING: D >= {:.1f} does NOT perfectly separate T3req from T2ok.".format(D_THRESH))
+        if t3req_below > 0:
+            below = [name for name, d in t3req if d is None or d < D_THRESH]
+            print(f"  T3req below threshold: {below}")
+        if t2ok_above > 0:
+            above = [name for name, d in t2ok if d is not None and d >= D_THRESH]
+            print(f"  T2ok at or above threshold: {above}")
+        print("  This may indicate a scorecard classification issue.")
+        print()
 
     # Compute Fisher exact test
     try:
@@ -165,6 +290,24 @@ def main():
     print()
     print("TIME-AR-001: Fisher Exact Test")
     print("================================")
+    print(f"Source: {source_file}")
+    print()
+    print("T3req systems:")
+    for name, d in t3req:
+        if d is not None:
+            marker = ">=" if d >= D_THRESH else "<"
+            print(f"  {name:45s}  D = {d:5.1f}  ({marker} {D_THRESH})")
+        else:
+            print(f"  {name:45s}  D =    NA  (implicit < {D_THRESH})")
+    print()
+    print(f"T2ok systems ({n_t2ok} total):")
+    for name, d in t2ok:
+        if d is not None:
+            marker = ">=" if d >= D_THRESH else "<"
+            print(f"  {name:45s}  D = {d:5.1f}  ({marker} {D_THRESH})")
+        else:
+            print(f"  {name:45s}  D =    NA  (implicit < {D_THRESH})")
+    print()
     print("Contingency Table:")
     print(f"              D >= {D_THRESH}   D < {D_THRESH}")
     print(f"T3req:        {t3req_above:5d}     {t3req_below:5d}     | {n_t3req:2d}")

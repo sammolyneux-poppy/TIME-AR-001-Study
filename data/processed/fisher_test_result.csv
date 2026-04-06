@@ -1,2 +1,2 @@
 test,n_t3req,n_t2ok,d_threshold,t3req_above,t3req_below,t2ok_above,t2ok_below,odds_ratio,p_value,conclusion
-Fisher exact (two-sided),6,24,5.0,6,0,0,24,inf,1.68e-06,p = 1.68e-06; NOT < 1e-6
+Fisher exact (two-sided),6,25,5.0,6,0,0,25,inf,1.36e-06,p = 1.36e-06; NOT < 1e-6

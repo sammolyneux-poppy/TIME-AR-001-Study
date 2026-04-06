@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-TIME-AR-001 v3.1: Compute gamma_crit and F15 classifications for ALL systems.
+TIME-AR-001 v3.1.1: Compute gamma_crit and F15 classifications for ALL systems.
 
 The temporal exclusion criterion: gamma^D > T
 gamma_crit = T^(1/D) — the minimum efficiency gap at which exclusion activates.
@@ -13,12 +13,20 @@ Classification tiers:
   Tmarg_cultural : cultural systems (LANG, COMP, ECON domains)
   T3req_bio      : biological cross-domain systems with deep hierarchy
 
-v3.1 authoritative classifications hardcoded per report.
+v3.1.1 refactored:
+  - Organism-level values DERIVED from raw CSVs (item 3)
+  - Named override rules with audit trail (item 4)
+  - Computed baseline + final columns in master scorecard (items 4, 17)
+  - Stable system IDs (item 9)
+  - Explicit dedupe report (item 10)
+  - WGD provenance from wgd_adjusted_d.csv (item 11)
+  - T3req_combined row in classification summary (item 16)
 """
 
 import csv
 import math
 import os
+import re
 import sys
 
 # ── Paths ──
@@ -27,6 +35,32 @@ DATA_DIR = os.path.join(SCRIPT_DIR, '..', 'data')
 RAW = os.path.join(DATA_DIR, 'raw')
 PROC = os.path.join(DATA_DIR, 'processed')
 os.makedirs(PROC, exist_ok=True)
+
+
+# ══════════════════════════════════════════════════════════════════════
+# Override Rules (item 4)
+# ══════════════════════════════════════════════════════════════════════
+# Each rule: id, applies_to function, effect function, reason string.
+# Applied in order; first matching rule wins.
+
+RULES = {
+    'WGD_ADJUSTMENT': {
+        'description': 'WGD inflates hierarchy depth; reduce D_family by WGD adjustment',
+        'reason': 'WGD inflates hierarchy depth; D_family reduced per wgd_adjusted_d.csv',
+    },
+    'CONSERVATIVE_NEAR_THRESHOLD': {
+        'description': 'Near-threshold gc<100 classified as Tmarg due to sensitivity at D-1',
+        'reason': 'Near threshold + sensitivity analysis at D-1 pushes gc above 100',
+    },
+    'ORGANISM_LEVEL_POLICY': {
+        'description': 'Organism-level D influenced by WGD; gene-family result is primary claim',
+        'reason': 'Organism-level D influenced by WGD; gene-family gc (kinases=7.4) is primary claim',
+    },
+    'CULTURAL_CONTINGENCY': {
+        'description': 'Cultural T definition contested; classify as Tmarg_cultural',
+        'reason': 'Cultural T definition contested; cultural systems reclassified',
+    },
+}
 
 
 # ── Helpers ──
@@ -53,7 +87,7 @@ def compute_gamma_crit(T, D):
 
 def safe_float(val, default=None):
     """Parse a float, returning default on failure."""
-    if val is None or val.strip() == '' or val.strip().upper() == 'NA':
+    if val is None or str(val).strip() == '' or str(val).strip().upper() == 'NA':
         return default
     try:
         return float(val)
@@ -61,59 +95,54 @@ def safe_float(val, default=None):
         return default
 
 
-# ── v3.1 Authoritative organism-level classifications ──
-# These are hardcoded from the v3.1 report and override any computation.
+def sanitize_id(name):
+    """Sanitize a name for use as a system ID component."""
+    s = name.strip()
+    # Replace spaces and special chars with underscores
+    s = re.sub(r'[^A-Za-z0-9]', '_', s)
+    # Collapse multiple underscores
+    s = re.sub(r'_+', '_', s)
+    # Strip leading/trailing underscores
+    s = s.strip('_')
+    return s
 
-ORGANISM_TABLE = [
-    # (organism, D_org, T_mid, gc_org, F15a, family, D_fam, gc_fam, F15b)
-    ("H. sapiens",       5.5, 9.29e6,   18.5,      "Tmarg", "Kinases",          8.0,   7.4,      "T3req"),
-    ("D. rerio",         5.5, 1.02e9,   43.4,      "Tmarg", "Hox (WGD-adj D=3.5)", 3.5, 370.0,  "Tmarg"),
-    ("O. sativa",        5.5, 1.60e8,   31.0,      "Tmarg", "NBS-LRR",          5.5,   23.3,     "T3req"),
-    ("A. thaliana",      5.0, 3.58e9,   81.4,      "Tmarg", "RLKs",             5.0,   81.4,     "Tmarg"),
-    ("C. elegans",       4.5, 6.26e10,  250.7,     "Tmarg", "NHR",              5.0,   144.3,    "Tmarg"),
-    ("D. melanogaster",  4.0, 6.52e9,   284.2,     "Tmarg", "ORs",              4.0,   284.2,    "Tmarg"),
-    ("E. coli",          3.0, 2.04e13,  27323.9,   "T2ok",  "ABC transporters", 3.0,   27323.9,  "T2ok"),
-    ("S. cerevisiae",    3.5, 3.29e12,  3770.0,    "Tmarg", "Kinases",          4.0,   1346.8,   "Tmarg"),
-    ("P. aeruginosa",    3.5, 1.02e13,  5208.9,    "Tmarg", "Two-component",    4.0,   1787.1,   "Tmarg"),
-    ("S. pombe",         3.0, 2.19e12,  12986.2,   "T2ok",  "Kinases",          3.0,   12986.2,  "T2ok"),
-    ("F. albicollis",    3.5, 7.50e7,   177.8,     "Tmarg", "Kinases",          4.0,   93.1,     "Tmarg"),
-    ("D. discoideum",    3.5, 2.19e12,  3356.1,    "Tmarg", "PKS",              4.0,   1216.5,   "Tmarg"),
-    ("S. solfataricus",  2.5, 6.57e12,  133975.7,  "T2ok",  "GH",               3.0,   18729.3,  "T2ok"),
-    ("M. jannaschii",    2.0, 1.75e13,  4183300.1, "T2ok",  "MCR",              2.0,   4183300.1,"T2ok"),
-    ("H. salinarum",     2.5, 1.75e12,  78925.1,   "T2ok",  "Htr",              3.0,   12050.7,  "T2ok"),
-    ("B. floridae",      5.0, 4.00e8,   52.5,      "Tmarg", "TLR",              9.0,   9.0,      "T3req"),
-]
 
-# v3.1 confirmed T3req deep families (family-level, not organism-level)
-T3REQ_FAMILIES = {
-    "Protein kinases",
-    "Amphioxus TLR",
-    "GPCR superfamily",
-    "Zinc finger TFs (KRAB-ZF)",
-    "Olfactory receptors",
-    "Rice NBS-LRR",  # mapped from O. sativa NBS-LRR
-}
+def make_system_id(prefix, name):
+    """Create a stable system ID like ORG-H_sapiens."""
+    return f"{prefix}-{sanitize_id(name)}"
 
-# T3req deep families with their (D, T, gc) for the master scorecard
-DEEP_FAMILY_CLASSIFICATIONS = {
-    "Protein kinases":          {"D": 8.0, "T": 9.3e6,  "gc": 7.4,  "verdict": "T3req"},
-    "Amphioxus TLR":            {"D": 9.0, "T": 4.0e8,  "gc": 9.0,  "verdict": "T3req"},
-    "GPCR superfamily":         {"D": 7.5, "T": 9.3e6,  "gc": 11.0, "verdict": "T3req"},
-    "Zinc finger TFs (KRAB-ZF)":{"D": 7.5, "T": 9.3e6,  "gc": 11.0, "verdict": "T3req"},
-    "Olfactory receptors":      {"D": 6.5, "T": 9.3e6,  "gc": 18.0, "verdict": "T3req"},
-    # Non-T3req deep families
-    "Homeodomain TFs":          {"D": 6.5, "T": 9.3e6,  "gc": None, "verdict": "Tmarg"},
-    "Cytochrome P450":          {"D": 6.5, "T": 9.3e6,  "gc": None, "verdict": "Tmarg"},
-    "Immunoglobulin SF":        {"D": 6.5, "T": 9.3e6,  "gc": None, "verdict": "Tmarg"},
-    "Hox clusters":             {"D": 5.5, "T": 9.3e6,  "gc": None, "verdict": "Tmarg"},
-    "bHLH TFs":                 {"D": 5.5, "T": 9.3e6,  "gc": None, "verdict": "Tmarg"},
-    "ABC transporters":         {"D": 5.0, "T": 2.04e13,"gc": None, "verdict": "T2ok"},
-}
+
+def classify_gc(gc, is_confirmed_deep=False):
+    """
+    Pure threshold classification based on gc value.
+    Returns verdict string. Does NOT apply overrides.
+    """
+    if gc == float('inf') or gc is None:
+        return 'Tna'
+    if gc <= 100:
+        if is_confirmed_deep:
+            return 'T3req'
+        else:
+            return 'Tmarg'
+    elif gc <= 10000:
+        return 'Tmarg'
+    else:
+        return 'T2ok'
+
+
+# ── Lookup helpers ──
+
+def _get_field(organism, raw_orgs, field, default=''):
+    """Look up a field from organism_hierarchy_depths data."""
+    for row in raw_orgs:
+        if row['organism'] == organism:
+            return row.get(field, default)
+    return default
 
 
 def main():
     print("=" * 70)
-    print("TIME-AR-001 v3.1: gamma_crit Computation")
+    print("TIME-AR-001 v3.1.1: gamma_crit Computation (refactored)")
     print("=" * 70)
 
     # ══════════════════════════════════════════════════════════════════════
@@ -148,68 +177,218 @@ def main():
     raw_wgd = load_csv('wgd_adjusted_d.csv', required=False)
     print(f"  wgd_adjusted_d.csv: {len(raw_wgd)} rows")
 
-    raw_gamma_cal = load_csv('gamma_calibration.csv', required=False)
-    print(f"  gamma_calibration.csv: {len(raw_gamma_cal)} rows")
+    # gamma_calibration.csv is report-only supporting evidence (item 11).
+    # It is NOT used computationally in the pipeline; retained in data/raw/
+    # for provenance documentation only.
+
+    raw_family_map = load_csv('organism_family_map.csv')
+    print(f"  organism_family_map.csv: {len(raw_family_map)} rows")
 
     # ══════════════════════════════════════════════════════════════════════
-    # 2. Build master scorecard — one row per system
+    # 2. Build indexes from raw data (item 3)
+    # ══════════════════════════════════════════════════════════════════════
+    print("\n── Building derived indexes ──")
+
+    # D_consensus by organism (from organism_hierarchy_depths.csv)
+    d_consensus_by_org = {}
+    for row in raw_orgs:
+        d_consensus_by_org[row['organism']] = safe_float(row['D_consensus'])
+
+    # T_midpoint by organism (from time_budgets.csv)
+    t_midpoint_by_org = {}
+    for row in raw_times:
+        t_midpoint_by_org[row['organism']] = safe_float(row['T_midpoint'])
+
+    # WGD adjustments indexed by (organism, family) (item 11 — actually USE wgd_adjusted_d.csv)
+    wgd_index = {}
+    for row in raw_wgd:
+        key = (row['organism'].strip(), row['family'].strip())
+        wgd_index[key] = {
+            'D_raw': safe_float(row['D_raw']),
+            'wgd_events': safe_float(row.get('wgd_events', '0'), 0),
+            'wgd_adjustment': safe_float(row.get('wgd_adjustment', '0'), 0),
+            'D_wgd_adj': safe_float(row['D_wgd_adj']),
+            'notes': row.get('notes', ''),
+        }
+
+    # Family map by organism (from organism_family_map.csv)
+    family_map_by_org = {}
+    for row in raw_family_map:
+        family_map_by_org[row['organism'].strip()] = {
+            'family': row['family'].strip(),
+            'D_family': safe_float(row['D_family']),
+            'T_family': safe_float(row.get('T_family')),  # None means use organism T
+            'notes': row.get('notes', ''),
+        }
+
+    # v3.1 confirmed T3req deep families (family-level, not organism-level)
+    T3REQ_FAMILIES = {
+        "Protein kinases",
+        "Amphioxus TLR",
+        "GPCR superfamily",
+        "Zinc finger TFs (KRAB-ZF)",
+        "Olfactory receptors",
+        "Rice NBS-LRR",
+    }
+
+    # Deep family classification data — derived from deep_paralog_families.csv + time context
+    # T defaults: human families use H. sapiens T; Amphioxus uses B. floridae T;
+    # Rice NBS-LRR uses O. sativa T; ABC transporters use E. coli T.
+    DEEP_FAMILY_T_MAP = {
+        "Protein kinases":           t_midpoint_by_org.get('H. sapiens', 9.3e6),
+        "GPCR superfamily":          t_midpoint_by_org.get('H. sapiens', 9.3e6),
+        "Zinc finger TFs (KRAB-ZF)": t_midpoint_by_org.get('H. sapiens', 9.3e6),
+        "Olfactory receptors":       t_midpoint_by_org.get('H. sapiens', 9.3e6),
+        "Homeodomain TFs":           t_midpoint_by_org.get('H. sapiens', 9.3e6),
+        "Cytochrome P450":           t_midpoint_by_org.get('H. sapiens', 9.3e6),
+        "Immunoglobulin SF":         t_midpoint_by_org.get('H. sapiens', 9.3e6),
+        "Hox clusters":              t_midpoint_by_org.get('H. sapiens', 9.3e6),
+        "bHLH TFs":                  t_midpoint_by_org.get('H. sapiens', 9.3e6),
+        "ABC transporters":          t_midpoint_by_org.get('E. coli', 2.04e13),
+        "Amphioxus TLR":             t_midpoint_by_org.get('B. floridae', 4.0e8),
+    }
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 3. Build master scorecard — one row per system
     # ══════════════════════════════════════════════════════════════════════
     master = []  # list of dicts
 
-    # --- 2a. Organism-level entries (F15a) ---
-    print("\n── Processing organisms (F15a/F15b) ──")
+    # --- 3a. Organism-level entries (F15a/F15b) — DERIVED from raw CSVs (item 3) ---
+    print("\n── Processing organisms (F15a/F15b) — derived from raw CSVs ──")
     f15_rows = []
 
-    for entry in ORGANISM_TABLE:
-        (name, D_org, T_mid, gc_org, f15a,
-         fam_name, D_fam, gc_fam, f15b) = entry
+    for org_row in raw_orgs:
+        name = org_row['organism']
+        domain = org_row['domain']
+        D_org = safe_float(org_row['D_consensus'])
+        T_mid = t_midpoint_by_org.get(name)
+        citation = org_row.get('primary_citation', '')
+
+        if D_org is None or T_mid is None:
+            print(f"  WARNING: skipping {name}, missing D or T")
+            continue
+
+        # Compute organism-level gc
+        gc_org = compute_gamma_crit(T_mid, D_org)
+
+        # Look up deepest family from organism_family_map.csv
+        fam_info = family_map_by_org.get(name)
+        if fam_info is None:
+            print(f"  WARNING: no family mapping for {name}")
+            continue
+
+        fam_name = fam_info['family']
+        D_fam_raw = fam_info['D_family']
+        T_fam = fam_info['T_family'] if fam_info['T_family'] is not None else T_mid
+
+        # Check WGD adjustment from wgd_adjusted_d.csv (item 11)
+        D_fam = D_fam_raw
+        wgd_flag = "no"
+        wgd_adj_val = ''
+        override_rule_id = ''
+        override_reason = ''
+
+        # Try to find WGD entry for this organism+family
+        # Normalize family name for WGD lookup (handle name mismatches)
+        wgd_lookup_names = [fam_name]
+        if fam_name == 'Hox clusters' or fam_name == 'Hox':
+            wgd_lookup_names.append('Hox clusters')
+        if fam_name == 'Kinases':
+            wgd_lookup_names.append('Protein kinases')
+
+        for wgd_fam_name in wgd_lookup_names:
+            wgd_key = (name, wgd_fam_name)
+            if wgd_key in wgd_index:
+                wgd_info = wgd_index[wgd_key]
+                if wgd_info['wgd_adjustment'] != 0:
+                    D_fam = wgd_info['D_wgd_adj']
+                    wgd_flag = "yes"
+                    wgd_adj_val = D_fam
+                    override_rule_id = 'WGD_ADJUSTMENT'
+                    override_reason = RULES['WGD_ADJUSTMENT']['reason']
+                    fam_name_display = f"{fam_name} (WGD-adj D={D_fam})"
+                else:
+                    fam_name_display = fam_name
+                break
+        else:
+            fam_name_display = fam_name
+
+        # Compute family-level gc
+        gc_fam = compute_gamma_crit(T_fam, D_fam)
+
+        # ── Classify (computed baseline) ──
+        # F15a: organism-level verdict
+        verdict_org_computed = classify_gc(gc_org)
+        # F15b: family-level verdict (T3req only for confirmed deep families)
+        # For F15b, organism-level entries use family gc but check if it's a known deep family
+        is_deep = fam_name in ('Kinases', 'TLR', 'NBS-LRR') or fam_name_display.startswith('Hox')
+        verdict_fam_computed = classify_gc(gc_fam, is_confirmed_deep=is_deep)
+
+        # ── Apply override rules ──
+        verdict_org_final = verdict_org_computed
+        verdict_fam_final = verdict_fam_computed
+
+        # ORGANISM_LEVEL_POLICY: H. sapiens F15a
+        if name == 'H. sapiens' and gc_org < 100:
+            # gc_org < 100 would normally be Tmarg; keep as Tmarg but note policy
+            # The actual F15a is Tmarg (organism-level), F15b is T3req (kinases gc=7.4)
+            if not override_rule_id:
+                override_rule_id = 'ORGANISM_LEVEL_POLICY'
+                override_reason = RULES['ORGANISM_LEVEL_POLICY']['reason']
+
+        # CONSERVATIVE_NEAR_THRESHOLD: A. thaliana RLKs, F. albicollis kinases
+        # These organisms have gc < 100 but near the threshold; sensitivity analysis
+        # at D-1 pushes gc above 100, so we conservatively classify as Tmarg.
+        if name == 'A. thaliana' and gc_fam < 100:
+            verdict_fam_final = 'Tmarg'
+            if not override_rule_id:
+                override_rule_id = 'CONSERVATIVE_NEAR_THRESHOLD'
+                override_reason = RULES['CONSERVATIVE_NEAR_THRESHOLD']['reason']
+        if name == 'F. albicollis' and gc_fam < 100:
+            verdict_fam_final = 'Tmarg'
+            if not override_rule_id:
+                override_rule_id = 'CONSERVATIVE_NEAR_THRESHOLD'
+                override_reason = RULES['CONSERVATIVE_NEAR_THRESHOLD']['reason']
 
         # F15 scorecard row
         f15_rows.append({
             'organism': name,
-            'domain': _get_domain(name, raw_orgs),
+            'domain': domain,
             'D_organism': D_org,
             'D_family': D_fam,
-            'family_name': fam_name,
+            'family_name': fam_name_display if wgd_flag == "yes" else fam_name,
             'T_midpoint': T_mid,
             'gamma_crit_organism': round(gc_org, 1),
             'gamma_crit_family': round(gc_fam, 1),
-            'F15a': f15a,
-            'F15b': f15b,
+            'F15a': verdict_org_final,
+            'F15b': verdict_fam_final,
         })
 
         # Master scorecard: organism-level entry
-        wgd_flag = "yes" if name in ("D. rerio",) else "no"
-        override = ""
-        if name == "D. rerio":
-            override = "WGD-adjusted D=3.5 for Hox family"
-        elif name == "A. thaliana":
-            override = "Conservative override: gc=81.4 -> Tmarg"
-        elif name == "F. albicollis":
-            override = "Conservative override: gc=93.1 -> Tmarg"
-        elif name == "H. sapiens":
-            override = "Organism-level conservative policy"
-
-        citation = _get_citation(name, raw_orgs)
         master.append({
+            'system_id': make_system_id('ORG', name),
             'system': name,
-            'domain': _get_domain(name, raw_orgs),
+            'domain': domain,
             'system_type': 'organism',
             'D_input': D_org,
-            'D_wgd_adj': '',
+            'D_wgd_adj': wgd_adj_val,
             'T_midpoint': T_mid,
-            'gamma_crit': round(gc_org, 1),
-            'F15a': f15a,
-            'F15b': f15b,
-            'classification_basis': f"Organism D={D_org}; deepest family {fam_name} D={D_fam}",
+            'gamma_crit_computed': round(gc_org, 1),
+            'gamma_crit_final': round(gc_org, 1),
+            'verdict_computed': verdict_org_computed,
+            'verdict_final': verdict_org_final,
+            'F15a': verdict_org_final,
+            'F15b': verdict_fam_final,
+            'classification_basis': f"Organism D={D_org}; deepest family {fam_name_display if wgd_flag == 'yes' else fam_name} D={D_fam}",
             'wgd_adjusted': wgd_flag,
-            'override_note': override,
+            'override_rule_id': override_rule_id,
+            'override_reason': override_reason,
             'primary_citation': citation,
         })
 
     print(f"  {len(f15_rows)} organisms processed")
 
-    # --- 2b. Deep paralog families ---
+    # --- 3b. Deep paralog families ---
     print("\n── Processing deep paralog families ──")
     deep_family_count = 0
     for row in raw_families:
@@ -218,67 +397,82 @@ def main():
         if D is None:
             continue
 
-        # Use pre-defined classifications if available
-        if fam in DEEP_FAMILY_CLASSIFICATIONS:
-            info = DEEP_FAMILY_CLASSIFICATIONS[fam]
-            T = info['T']
-            gc = info['gc'] if info['gc'] is not None else compute_gamma_crit(T, info['D'])
-            verdict = info['verdict']
-            D_used = info['D']
-        else:
-            # Compute from data — use H. sapiens T as default for human families
-            T = 9.3e6
-            D_used = D
-            gc = compute_gamma_crit(T, D_used)
-            if gc <= 100 and fam in T3REQ_FAMILIES:
-                verdict = "T3req"
-            elif gc <= 100:
-                verdict = "Tmarg"  # conservative
-            elif gc <= 10000:
-                verdict = "Tmarg"
-            else:
-                verdict = "T2ok"
+        # Determine T from the deep family T map
+        T = DEEP_FAMILY_T_MAP.get(fam)
+        if T is None:
+            # Default to H. sapiens T
+            T = t_midpoint_by_org.get('H. sapiens', 9.3e6)
 
-        # Special: Rice NBS-LRR
-        if fam == "Amphioxus TLR":
-            T = 4.0e8
+        # Check WGD adjustments for this family (use H. sapiens context for human families)
+        D_used = D
+        wgd_key = ('H. sapiens', fam)
+        wgd_adj_val = ''
+        if wgd_key in wgd_index:
+            wgd_info = wgd_index[wgd_key]
+            if wgd_info['wgd_adjustment'] != 0:
+                D_used = wgd_info['D_wgd_adj']
+                wgd_adj_val = D_used
+
+        # Compute gc
+        gc = compute_gamma_crit(T, D_used)
+
+        # Classify
+        is_t3req = fam in T3REQ_FAMILIES
+        verdict_computed = classify_gc(gc, is_confirmed_deep=is_t3req)
+        verdict_final = verdict_computed
+        override_rule_id = ''
+        override_reason = ''
 
         master.append({
+            'system_id': make_system_id('FAM', fam),
             'system': fam,
             'domain': 'BIO',
             'system_type': 'deep_family',
             'D_input': D,
-            'D_wgd_adj': '',
+            'D_wgd_adj': wgd_adj_val,
             'T_midpoint': T,
-            'gamma_crit': round(gc, 1),
+            'gamma_crit_computed': round(gc, 1),
+            'gamma_crit_final': round(gc, 1),
+            'verdict_computed': verdict_computed,
+            'verdict_final': verdict_final,
             'F15a': '',
-            'F15b': verdict,
+            'F15b': verdict_final,
             'classification_basis': f"Deep paralog family D={D_used}",
-            'wgd_adjusted': 'no',
-            'override_note': '',
+            'wgd_adjusted': 'yes' if wgd_adj_val != '' else 'no',
+            'override_rule_id': override_rule_id,
+            'override_reason': override_reason,
             'primary_citation': row.get('primary_citation', ''),
         })
         deep_family_count += 1
-    # Add Rice NBS-LRR as a separate T3req entry (from O. sativa)
+
+    # Add Rice NBS-LRR as a separate T3req entry (from O. sativa lineage)
+    rice_T = t_midpoint_by_org.get('O. sativa', 1.6e8)
+    rice_D = 5.5
+    rice_gc = compute_gamma_crit(rice_T, rice_D)
     master.append({
+        'system_id': make_system_id('FAM', 'Rice NBS-LRR'),
         'system': 'Rice NBS-LRR',
         'domain': 'BIO',
         'system_type': 'deep_family',
-        'D_input': 5.5,
+        'D_input': rice_D,
         'D_wgd_adj': '',
-        'T_midpoint': 1.6e8,
-        'gamma_crit': 23.0,  # v3.1 authoritative value
+        'T_midpoint': rice_T,
+        'gamma_crit_computed': round(rice_gc, 1),
+        'gamma_crit_final': round(rice_gc, 1),
+        'verdict_computed': 'T3req',
+        'verdict_final': 'T3req',
         'F15a': '',
         'F15b': 'T3req',
-        'classification_basis': 'Deep paralog family D=5.5; O. sativa lineage',
+        'classification_basis': f'Deep paralog family D={rice_D}; O. sativa lineage',
         'wgd_adjusted': 'no',
-        'override_note': '',
+        'override_rule_id': '',
+        'override_reason': '',
         'primary_citation': 'Zhou et al. 2004 Mol Genet Genomics 271:402-415',
     })
     deep_family_count += 1
     print(f"  {deep_family_count} deep families processed")
 
-    # --- 2c. Cross-domain temporal systems ---
+    # --- 3c. Cross-domain temporal systems ---
     print("\n── Processing cross-domain systems ──")
     cross_count = 0
     for row in raw_cross:
@@ -294,43 +488,63 @@ def main():
         else:
             gc = float('inf')
 
-        # Determine verdict per v3.1 rules
+        # Determine computed verdict per threshold rules
+        # For cross-domain systems, the CSV verdict is authoritative when it encodes
+        # domain-specific reasoning (T3req_bio for biological hierarchies, Tna for
+        # non-evolutionary systems) that pure gc thresholds cannot capture.
         if verdict_csv:
-            verdict = verdict_csv
-        elif domain in ('LANG', 'COMP', 'ECON'):
-            verdict = 'Tmarg_cultural'
+            verdict_computed = verdict_csv
+        elif gc == float('inf'):
+            verdict_computed = 'Tna'
+        elif gc <= 100:
+            verdict_computed = 'Tmarg'
+        elif gc <= 10000:
+            verdict_computed = 'Tmarg'
         else:
-            if gc <= 100:
-                verdict = 'T3req_bio'
-            elif gc <= 10000:
-                verdict = 'Tmarg'
-            else:
-                verdict = 'T2ok'
+            verdict_computed = 'T2ok'
 
-        # v3.1: ALL cultural systems (LANG/COMP/ECON) with marginal verdict
-        # get Tmarg_cultural, overriding CSV "Tmarg". Keep Tna/T2ok as-is.
-        if domain in ('LANG', 'COMP', 'ECON') and verdict == 'Tmarg':
-            verdict = 'Tmarg_cultural'
+        verdict_final = verdict_computed
+        override_rule_id = ''
+        override_reason = ''
+
+        # CULTURAL_CONTINGENCY: ALL LANG/COMP/ECON systems with marginal verdict
+        # get Tmarg_cultural, overriding computed Tmarg.
+        if domain in ('LANG', 'COMP', 'ECON'):
+            if verdict_final == 'Tmarg':
+                verdict_final = 'Tmarg_cultural'
+                override_rule_id = 'CULTURAL_CONTINGENCY'
+                override_reason = RULES['CULTURAL_CONTINGENCY']['reason']
+            elif verdict_csv == 'Tmarg':
+                verdict_final = 'Tmarg_cultural'
+                override_rule_id = 'CULTURAL_CONTINGENCY'
+                override_reason = RULES['CULTURAL_CONTINGENCY']['reason']
+
+        gc_out = round(gc, 1) if gc != float('inf') else 'NA'
 
         master.append({
+            'system_id': make_system_id('XD', system),
             'system': system,
             'domain': domain,
             'system_type': 'cross_domain',
             'D_input': D if D is not None else '',
             'D_wgd_adj': '',
             'T_midpoint': T if T is not None else '',
-            'gamma_crit': round(gc, 1) if gc != float('inf') else 'NA',
+            'gamma_crit_computed': gc_out,
+            'gamma_crit_final': gc_out,
+            'verdict_computed': verdict_computed,
+            'verdict_final': verdict_final,
             'F15a': '',
-            'F15b': verdict,
+            'F15b': verdict_final,
             'classification_basis': f"Cross-domain {domain}",
             'wgd_adjusted': 'no',
-            'override_note': '',
+            'override_rule_id': override_rule_id,
+            'override_reason': override_reason,
             'primary_citation': row.get('primary_citation', row.get('notes', '')),
         })
         cross_count += 1
     print(f"  {cross_count} cross-domain systems processed")
 
-    # --- 2d. Shallow systems ---
+    # --- 3d. Shallow systems ---
     print("\n── Processing shallow systems ──")
     shallow_count = 0
     for row in raw_shallow:
@@ -338,48 +552,58 @@ def main():
         verdict = row.get('F15_verdict', 'T2ok').strip()
         D_obs = row.get('D_observed', '')
         master.append({
+            'system_id': make_system_id('SH', system),
             'system': system,
             'domain': row.get('category', ''),
             'system_type': 'shallow',
             'D_input': D_obs,
             'D_wgd_adj': '',
             'T_midpoint': '',
-            'gamma_crit': 'NA',
+            'gamma_crit_computed': 'NA',
+            'gamma_crit_final': 'NA',
+            'verdict_computed': verdict,
+            'verdict_final': verdict,
             'F15a': '',
             'F15b': verdict,
             'classification_basis': f"Shallow: {row.get('limiting_mechanism', '')}",
             'wgd_adjusted': 'no',
-            'override_note': '',
+            'override_rule_id': '',
+            'override_reason': '',
             'primary_citation': row.get('primary_citation', ''),
         })
         shallow_count += 1
     print(f"  {shallow_count} shallow systems processed")
 
-    # --- 2e. Physical fractals ---
+    # --- 3e. Physical fractals ---
     print("\n── Processing physical fractals ──")
     fractal_count = 0
     for row in raw_fractals:
         system = row['system']
         verdict = row.get('F15_verdict', 'Tna').strip()
         master.append({
+            'system_id': make_system_id('PH', system),
             'system': system,
             'domain': 'PHYS',
             'system_type': 'physical_fractal',
             'D_input': row.get('D_apparent', ''),
             'D_wgd_adj': '',
             'T_midpoint': '',
-            'gamma_crit': 'NA',
+            'gamma_crit_computed': 'NA',
+            'gamma_crit_final': 'NA',
+            'verdict_computed': verdict,
+            'verdict_final': verdict,
             'F15a': '',
             'F15b': verdict,
             'classification_basis': f"Physical: {row.get('mechanism', '')}",
             'wgd_adjusted': 'no',
-            'override_note': '',
+            'override_rule_id': '',
+            'override_reason': '',
             'primary_citation': row.get('primary_citation', ''),
         })
         fractal_count += 1
     print(f"  {fractal_count} physical fractals processed")
 
-    # --- 2f. Adversarial cases ---
+    # --- 3f. Adversarial cases ---
     if raw_adversarial:
         print("\n── Processing adversarial cases ──")
         adv_count = 0
@@ -387,24 +611,29 @@ def main():
             system = row.get('system', row.get('case', ''))
             verdict = row.get('F15_verdict', row.get('verdict', 'Tna')).strip()
             master.append({
+                'system_id': make_system_id('ADV', system),
                 'system': system,
                 'domain': row.get('domain', 'ADV'),
                 'system_type': 'adversarial',
                 'D_input': row.get('D', row.get('D_depth', '')),
                 'D_wgd_adj': '',
                 'T_midpoint': row.get('T', ''),
-                'gamma_crit': 'NA',
+                'gamma_crit_computed': 'NA',
+                'gamma_crit_final': 'NA',
+                'verdict_computed': verdict,
+                'verdict_final': verdict,
                 'F15a': '',
                 'F15b': verdict,
                 'classification_basis': 'Adversarial test case',
                 'wgd_adjusted': 'no',
-                'override_note': row.get('notes', row.get('note', '')),
+                'override_rule_id': '',
+                'override_reason': '',
                 'primary_citation': row.get('primary_citation', ''),
             })
             adv_count += 1
         print(f"  {adv_count} adversarial cases processed")
 
-    # --- 2g. Cortical families ---
+    # --- 3g. Cortical families ---
     if raw_cortical:
         print("\n── Processing cortical families ──")
         cort_count = 0
@@ -416,52 +645,77 @@ def main():
                 gc = compute_gamma_crit(T, D)
             else:
                 gc = float('inf')
+            gc_out = round(gc, 1) if gc != float('inf') else 'NA'
             master.append({
+                'system_id': make_system_id('CORT', system),
                 'system': system,
                 'domain': 'NEUR',
                 'system_type': 'cortical_family',
                 'D_input': D if D is not None else '',
                 'D_wgd_adj': '',
                 'T_midpoint': T if T is not None else '',
-                'gamma_crit': round(gc, 1) if gc != float('inf') else 'NA',
+                'gamma_crit_computed': gc_out,
+                'gamma_crit_final': gc_out,
+                'verdict_computed': 'Tmarg',
+                'verdict_final': 'Tmarg',
                 'F15a': '',
                 'F15b': 'Tmarg',
                 'classification_basis': 'Cortical gene family; Tmarg per report',
                 'wgd_adjusted': 'no',
-                'override_note': '',
+                'override_rule_id': '',
+                'override_reason': '',
                 'primary_citation': row.get('primary_citation', ''),
             })
             cort_count += 1
         print(f"  {cort_count} cortical families processed")
 
     # ══════════════════════════════════════════════════════════════════════
-    # 3. Remove duplicate shallow/cross-domain entries
+    # 4. Deduplication with explicit report (item 10)
     # ══════════════════════════════════════════════════════════════════════
-    # Some systems appear in both shallow_systems.csv and cross_domain_temporal.csv
-    # (baby name families, dog breed lineages, proverbs, regular expressions, finite automata).
-    # Keep only the first occurrence (cross_domain comes before shallow in master).
-    seen_systems = set()
+    seen_systems = {}  # key -> index in master
     deduped = []
+    dedupe_report = []
+
     for row in master:
         key = row['system'].strip().lower()
         if key in seen_systems:
+            kept_row = seen_systems[key]
+            dedupe_report.append({
+                'duplicate_name': row['system'],
+                'source_kept': kept_row['system_type'],
+                'source_dropped': row['system_type'],
+                'reason': f"Duplicate of '{kept_row['system']}'; kept {kept_row['system_type']} entry (appears first in processing order)",
+            })
             continue
-        seen_systems.add(key)
+        seen_systems[key] = row
         deduped.append(row)
-    if len(deduped) < len(master):
-        print(f"\n  Removed {len(master) - len(deduped)} duplicate entries")
+
+    if dedupe_report:
+        print(f"\n  Removed {len(dedupe_report)} duplicate entries (see dedupe_report.csv)")
     master = deduped
 
+    # Write dedupe report (item 10)
+    dedupe_path = os.path.join(PROC, 'dedupe_report.csv')
+    with open(dedupe_path, 'w', newline='') as f:
+        w = csv.DictWriter(f, fieldnames=['duplicate_name', 'source_kept', 'source_dropped', 'reason'])
+        w.writeheader()
+        for row in dedupe_report:
+            w.writerow(row)
+    print(f"  dedupe_report.csv: {len(dedupe_report)} rows")
+
     # ══════════════════════════════════════════════════════════════════════
-    # 4. Write output files
+    # 5. Write output files
     # ══════════════════════════════════════════════════════════════════════
     print("\n── Writing output files ──")
 
-    # 4a. Master scorecard
+    # 5a. Master scorecard (items 4, 9, 17)
     master_fields = [
-        'system', 'domain', 'system_type', 'D_input', 'D_wgd_adj',
-        'T_midpoint', 'gamma_crit', 'F15a', 'F15b',
-        'classification_basis', 'wgd_adjusted', 'override_note', 'primary_citation'
+        'system_id', 'system', 'domain', 'system_type', 'D_input', 'D_wgd_adj',
+        'T_midpoint', 'gamma_crit_computed', 'gamma_crit_final',
+        'verdict_computed', 'verdict_final',
+        'F15a', 'F15b',
+        'classification_basis', 'wgd_adjusted',
+        'override_rule_id', 'override_reason', 'primary_citation'
     ]
     master_path = os.path.join(PROC, 'master_scorecard.csv')
     with open(master_path, 'w', newline='') as f:
@@ -471,7 +725,7 @@ def main():
             w.writerow(row)
     print(f"  master_scorecard.csv: {len(master)} rows")
 
-    # 4b. F15 scorecard (organism-level only)
+    # 5b. F15 scorecard (organism-level only)
     f15_fields = [
         'organism', 'domain', 'D_organism', 'D_family', 'family_name',
         'T_midpoint', 'gamma_crit_organism', 'gamma_crit_family', 'F15a', 'F15b'
@@ -484,10 +738,10 @@ def main():
             w.writerow(row)
     print(f"  f15_scorecard.csv: {len(f15_rows)} rows")
 
-    # 4c. Gamma_crit table — all systems with computable gc, sorted ascending
+    # 5c. Gamma_crit table — all systems with computable gc, sorted ascending
     gc_table = []
     for row in master:
-        gc_val = row['gamma_crit']
+        gc_val = row['gamma_crit_final']
         if gc_val == 'NA' or gc_val == '' or gc_val == float('inf'):
             continue
         try:
@@ -513,7 +767,7 @@ def main():
             w.writerow(row)
     print(f"  gamma_crit_table.csv: {len(gc_table)} rows")
 
-    # 4d. Temporal exclusion zones (organism-level)
+    # 5d. Temporal exclusion zones (organism-level)
     tez_path = os.path.join(PROC, 'temporal_exclusion_zones.csv')
     with open(tez_path, 'w', newline='') as f:
         w = csv.writer(f)
@@ -534,7 +788,7 @@ def main():
             ])
     print(f"  temporal_exclusion_zones.csv: {len(f15_rows)} rows")
 
-    # 4e. Classification summary — counts by verdict across ALL systems
+    # 5e. Classification summary — counts by verdict across ALL systems (item 16)
     counts = {}
     for row in master:
         v = row['F15b'] if row['F15b'] else row['F15a']
@@ -543,17 +797,25 @@ def main():
         counts[v] = counts.get(v, 0) + 1
 
     total = sum(counts.values())
+
+    # Compute T3req_combined = T3req + T3req_bio (item 16)
+    t3req_combined = counts.get('T3req', 0) + counts.get('T3req_bio', 0)
+
     summary_path = os.path.join(PROC, 'classification_summary.csv')
     with open(summary_path, 'w', newline='') as f:
         w = csv.writer(f)
-        w.writerow(['classification', 'count', 'fraction'])
+        w.writerow(['classification', 'count', 'fraction', 'notes'])
         for k in sorted(counts.keys()):
             frac = f'{counts[k]/total:.3f}'
-            w.writerow([k, counts[k], frac])
-    print(f"  classification_summary.csv: {len(counts)} categories")
+            w.writerow([k, counts[k], frac, ''])
+        # Add T3req_combined row (item 16)
+        frac_combined = f'{t3req_combined/total:.3f}'
+        w.writerow(['T3req_combined', t3req_combined, frac_combined,
+                     'Sum of T3req + T3req_bio; both categories also listed separately above'])
+    print(f"  classification_summary.csv: {len(counts)} categories + T3req_combined")
 
     # ══════════════════════════════════════════════════════════════════════
-    # 5. Print summary
+    # 6. Print summary
     # ══════════════════════════════════════════════════════════════════════
     print("\n" + "=" * 70)
     print("RESULTS SUMMARY")
@@ -562,6 +824,7 @@ def main():
     print(f"\nClassification distribution:")
     for k in sorted(counts.keys()):
         print(f"  {k:20s}: {counts[k]:3d}  ({counts[k]/total*100:5.1f}%)")
+    print(f"  {'T3req_combined':20s}: {t3req_combined:3d}  ({t3req_combined/total*100:5.1f}%)  [T3req + T3req_bio]")
 
     # F15b organism-level summary
     print(f"\n── F15 Scorecard (16 organisms) ──")
@@ -578,7 +841,7 @@ def main():
     t3req_systems = [r for r in master if r['F15b'] in ('T3req', 'T3req_bio')]
     print(f"\n── T3req / T3req_bio systems ({len(t3req_systems)}) ──")
     for r in t3req_systems:
-        gc_str = str(r['gamma_crit'])
+        gc_str = str(r['gamma_crit_final'])
         print(f"  {r['system']:<40s}  gc={gc_str:<10s}  [{r['system_type']}]")
 
     # Tna summary
@@ -587,27 +850,15 @@ def main():
     for r in tna_systems:
         print(f"  {r['system']:<40s}  [{r['system_type']}]")
 
+    # Override summary
+    overridden = [r for r in master if r['override_rule_id']]
+    print(f"\n── Overridden systems ({len(overridden)}) ──")
+    for r in overridden:
+        print(f"  {r['system']:<40s}  rule={r['override_rule_id']}")
+
     print(f"\nOutput directory: {os.path.abspath(PROC)}")
     print("=" * 70)
     print("Done.")
-
-
-# ── Utility functions ──
-
-def _get_domain(organism, raw_orgs):
-    """Look up domain from organism_hierarchy_depths data."""
-    for row in raw_orgs:
-        if row['organism'] == organism:
-            return row['domain']
-    return ''
-
-
-def _get_citation(organism, raw_orgs):
-    """Look up primary citation from organism_hierarchy_depths data."""
-    for row in raw_orgs:
-        if row['organism'] == organism:
-            return row.get('primary_citation', '')
-    return ''
 
 
 if __name__ == '__main__':

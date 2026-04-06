@@ -1,0 +1,32 @@
+system,D,category,source_file
+Protein kinases,8.0,T3req,master_scorecard.csv
+GPCR superfamily,7.5,T3req,master_scorecard.csv
+Zinc finger TFs (KRAB-ZF),7.5,T3req,master_scorecard.csv
+Olfactory receptors,6.5,T3req,master_scorecard.csv
+Amphioxus TLR,9.0,T3req,master_scorecard.csv
+Rice NBS-LRR,5.5,T3req,master_scorecard.csv
+E. coli,3.0,T2ok,master_scorecard.csv
+S. pombe,3.0,T2ok,master_scorecard.csv
+S. solfataricus,2.5,T2ok,master_scorecard.csv
+M. jannaschii,2.0,T2ok,master_scorecard.csv
+H. salinarum,2.5,T2ok,master_scorecard.csv
+Proverb families,1.5,T2ok,master_scorecard.csv
+Regular expressions,2.5,T2ok,master_scorecard.csv
+Baby name families,1.5,T2ok,master_scorecard.csv
+Dog breed lineages,2.5,T2ok,master_scorecard.csv
+Simple tandem repeats (microsatellites),1.0,T2ok,master_scorecard.csv
+tRNA gene families (bacteria),1.5,T2ok,master_scorecard.csv
+M. tuberculosis PE/PPE families,2.5,T2ok,master_scorecard.csv
+Somatic VDJ recombination products,3.0,T2ok,master_scorecard.csv
+CRISPR spacer arrays,1.0,T2ok,master_scorecard.csv
+CPR bacteria,1.5,T2ok,master_scorecard.csv
+Cancer SCNA nesting,2.5,T2ok,master_scorecard.csv
+Normal tissue clonal expansion,1.5,T2ok,master_scorecard.csv
+TCR clonotype tree depth,1.5,T2ok,master_scorecard.csv
+B cell affinity maturation,2.5,T2ok,master_scorecard.csv
+Proverbs (oral tradition),1.5,T2ok,master_scorecard.csv
+Retroviral integrations (ERVs),NA,T2ok,master_scorecard.csv
+CpG island families,NA,T2ok,master_scorecard.csv
+Microsatellite expansion,NA,T2ok,master_scorecard.csv
+Viral quasispecies,NA,T2ok,master_scorecard.csv
+Prophage families,NA,T2ok,master_scorecard.csv
