@@ -24,6 +24,7 @@ first and falling back to F15b.
 
 import csv
 import os
+import sys
 from math import factorial
 
 # ---------------------------------------------------------------------------
@@ -31,44 +32,6 @@ from math import factorial
 # ---------------------------------------------------------------------------
 D_THRESH = 5.0
 
-# ---------------------------------------------------------------------------
-# Hardcoded fallback data (used ONLY when master_scorecard.csv is unavailable)
-# ---------------------------------------------------------------------------
-_FALLBACK_T3REQ = [
-    ("Protein kinases",       8.0),
-    ("Amphioxus TLR",         9.0),
-    ("GPCR superfamily",      7.5),
-    ("Zinc finger TFs",       7.5),
-    ("Olfactory receptors",   6.5),
-    ("Rice NBS-LRR",          5.5),
-]
-
-_FALLBACK_T2OK = [
-    ("Antibody SHM (mammals)",            1.0),
-    ("V(D)J recombination",               1.5),
-    ("Ciliates (MIC->MAC)",               2.0),
-    ("Drosophila telomere retrotransposons", 2.0),
-    ("Endosymbiont exit (mitochondria)",   2.5),
-    ("Endosymbiont exit (chloroplast)",    2.5),
-    ("Endosymbiont exit (Buchnera)",       1.5),
-    ("Endosymbiont exit (Wolbachia)",      1.0),
-    ("CRISPR-Cas (prokaryotes)",           3.0),
-    ("Restriction-modification",           2.0),
-    ("Phase variation (contingency loci)", 2.5),
-    ("Antigenic variation (Trypanosoma)",  2.5),
-    ("Antigenic variation (Plasmodium)",   3.0),
-    ("Antigenic variation (Neisseria)",    2.0),
-    ("Bacterial competence (B. subtilis)", 2.5),
-    ("Mating-type switching (yeast)",      1.5),
-    ("Chromatin diminution (Ascaris)",     2.0),
-    ("Programmed genome rearrangement (lamprey)", 2.5),
-    ("Transposon domestication (RAG)",     3.5),
-    ("Transposon domestication (Syncytin)",3.0),
-    ("PiRNA pathway",                      3.5),
-    ("Position-effect variegation",        1.5),
-    ("Bacterial toxin-antitoxin",          2.0),
-    ("Prion switching (yeast [PSI+])",     1.5),
-]
 
 
 def comb(n, k):
@@ -218,30 +181,25 @@ def main():
     input_table_path = os.path.join(project_dir, "data", "processed", "fisher_input_table.csv")
 
     # -----------------------------------------------------------------------
-    # Primary path: derive Fisher input from master_scorecard.csv
-    # Fallback: hardcoded lists (with WARNING)
+    # Load Fisher input from master_scorecard.csv (required)
     # -----------------------------------------------------------------------
-    source_file = "hardcoded_fallback"
+    if not os.path.exists(master_path):
+        print(f"ERROR: master_scorecard.csv not found at {master_path}")
+        print("Run compute_gamma_crit.py first to generate it.")
+        sys.exit(1)
+
     try:
-        if not os.path.exists(master_path):
-            raise FileNotFoundError(f"master_scorecard.csv not found at {master_path}")
-
         t3req, t2ok, source_file = load_from_master_scorecard(master_path)
+    except ValueError as e:
+        print(f"ERROR: {e}")
+        sys.exit(1)
 
-        if len(t3req) == 0 or len(t2ok) == 0:
-            raise ValueError(
-                f"master_scorecard.csv yielded {len(t3req)} T3req and {len(t2ok)} T2ok entries; "
-                "expected non-zero for both"
-            )
+    if len(t3req) == 0 or len(t2ok) == 0:
+        print(f"ERROR: master_scorecard.csv yielded {len(t3req)} T3req and {len(t2ok)} T2ok entries; "
+              "expected non-zero for both.")
+        sys.exit(1)
 
-        print(f"Loaded from master_scorecard.csv: {len(t3req)} T3req deep families, {len(t2ok)} T2ok systems")
-
-    except (FileNotFoundError, ValueError, KeyError) as e:
-        print(f"WARNING: Could not load from master_scorecard.csv: {e}")
-        print("WARNING: Falling back to hardcoded v3.1 data. Results may not reflect current scorecard.")
-        t3req = _FALLBACK_T3REQ
-        t2ok = _FALLBACK_T2OK
-        source_file = "hardcoded_fallback"
+    print(f"Loaded from master_scorecard.csv: {len(t3req)} T3req deep families, {len(t2ok)} T2ok systems")
 
     # Write the fisher_input_table.csv for inspectability
     write_fisher_input_table(input_table_path, t3req, t2ok, source_file)

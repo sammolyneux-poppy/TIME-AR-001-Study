@@ -14,7 +14,7 @@ The formal basis is the `temporal_separation_capstone` theorem (TIME-SPEC-001), 
 - **Tier 2 (IndelMutation):** genome length ≤ g₀ + T × k (linear growth)
 - **Tier 3 (RecursiveMutation):** genome length ≥ 2^n in n steps (exponential growth)
 
-## Key Results (v3.1.1)
+## Key Results (v3.1.2)
 
 **6 gene families with F15b = T3req (γ_crit ≤ 100):**
 
@@ -33,8 +33,8 @@ The formal basis is the `temporal_separation_capstone` theorem (TIME-SPEC-001), 
 |---------------|:-----:|:--------:|-------------|
 | T3req | 10 | 10.9% | Deep gene families |
 | T3req_bio | 3 | 3.3% | Biological cross-domain |
-| Tmarg | 21 | 22.8% | Organisms at organism level, near-threshold cases |
-| T2ok | 26 | 28.3% | Shallow biological, somatic, economic |
+| Tmarg | 22 | 23.9% | Organisms at organism level, near-threshold cases |
+| T2ok | 25 | 27.2% | Shallow biological, somatic, economic |
 | Tna | 23 | 25.0% | Physical fractals, exits, scalars |
 | Tmarg_cultural | 9 | 9.8% | Cultural systems (contingency flag) |
 
@@ -51,7 +51,7 @@ TIME-AR-001-Study/
 ├── README.md                    # This file
 ├── LICENSE
 ├── docs/
-│   ├── TIME_AR_001_Report.md    # Complete research report (v3.1.1)
+│   ├── TIME_AR_001_Report.md    # Complete research report (v3.1.2)
 │   ├── TIME_AR_001_Report.docx  # DOCX with embedded figures
 │   ├── TIME_AR_001_Tables.docx  # Supplementary tables (generated)
 │   ├── ROUND2_REVISION_SUMMARY.md
@@ -92,6 +92,7 @@ TIME-AR-001-Study/
 │   ├── fisher_test.py                      # Fisher exact test reproduction
 │   ├── generate_figures.py                 # All figure generation (matplotlib)
 │   ├── build_docx.py                       # Supplementary DOCX builder
+│   ├── validate.py                         # Post-pipeline validation checks
 │   └── run_all.sh                          # Complete replication script
 └── LICENSE
 ```
@@ -125,13 +126,33 @@ python3 scripts/build_docx.py            # Supplementary DOCX
 - scipy (Fisher test; falls back to manual computation if unavailable)
 - python-docx (DOCX output; falls back to text if unavailable)
 
-## v3.1.1 Arithmetic Correction
+## v3.1.2 Count Reconciliation (current)
 
-v3.1.1 corrects a systematic arithmetic error in organism-level γ_crit values present in v3.1. All organism-level gamma_crit values are now computed as `T^(1/D)` using the stated D_consensus and T_midpoint. Three organism-level classifications changed (C. elegans, S. cerevisiae, P. aeruginosa: T2ok → Tmarg). No family-level (F15b) classifications changed. The 6 T3req gene family results are unaffected.
+v3.1.2 reconciles README/report counts with the authoritative pipeline output (classification_summary.csv): T2ok=25, Tmarg=22. Updates Fisher table to 6 T3req vs 25 T2ok. No classification logic changes from v3.1.1.
+
+## v3.1.1 Arithmetic Correction (historical)
+
+v3.1.1 corrected a systematic arithmetic error in organism-level γ_crit values present in v3.1. All organism-level gamma_crit values are now computed as `T^(1/D)` using the stated D_consensus and T_midpoint. Three organism-level classifications changed (C. elegans, S. cerevisiae, P. aeruginosa: T2ok → Tmarg). No family-level (F15b) classifications changed. The 6 T3req gene family results are unaffected.
 
 ## Executable vs Conceptual Scope
 
-The computational pipeline (`scripts/run_all.sh`) produces a master scorecard of 92 systems derived from 12 structured input files. The manuscript (`docs/TIME_AR_001_Report.md`) additionally discusses ~110 systems including conceptual cases, literature-derived assessments, and historical reclassifications. Summary statistics in the README and abstract are based on the executable pipeline output.
+The computational pipeline (`scripts/run_all.sh`) produces a master scorecard of 92 systems derived from 10 structured input files. The manuscript (`docs/TIME_AR_001_Report.md`) additionally discusses ~110 systems including conceptual cases, literature-derived assessments, and historical reclassifications. Summary statistics in the README and abstract are based on the executable pipeline output.
+
+## Classification Derivation Policy
+
+**Deep family status:** A gene family is classified as T3req (requiring Tier-3 dynamics) when gamma_crit <= 100 AND the family has established phylogenetic evidence of deep hierarchy. Deep families are identified via `T3REQ_FAMILIES` in `compute_gamma_crit.py` (the 6 families listed in the Key Results table above).
+
+**Organism vs family verdicts:** F15a uses organism-level D_consensus to compute gamma_crit and assign a verdict. F15b uses the deepest gene family's D within the organism. The two verdicts are independent; an organism may be T2ok at organism level while its deepest family is T3req at family level.
+
+**Override rules:** Four named rules can change `verdict_computed` to `verdict_final` in the master scorecard:
+1. `WGD_ADJUSTMENT` — adjusts D downward for families with whole-genome duplication history
+2. `CONSERVATIVE_NEAR_THRESHOLD` — upgrades near-threshold systems (gamma_crit close to 100) to Tmarg
+3. `ORGANISM_LEVEL_POLICY` — applies organism-level verdict when it differs from family-level
+4. `CULTURAL_CONTINGENCY` — flags cultural systems as Tmarg_cultural due to contingency concerns
+
+All overrides are logged in the `override_rule_id` and `override_reason` columns of `master_scorecard.csv`.
+
+**Computed to Final pipeline:** `gamma_crit_computed` (from T^(1/D)) -> `verdict_computed` (threshold-based) -> override rules -> `verdict_final` (authoritative classification).
 
 ## Data Provenance Tiers
 

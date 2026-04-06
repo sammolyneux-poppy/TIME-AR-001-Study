@@ -2,8 +2,8 @@
 """
 generate_figures.py — Publication-quality figures for TIME-AR-001 study.
 
-Reads from data/processed/ and data/raw/ CSVs where available,
-falls back to hardcoded data with a WARNING. Writes 300 DPI PNGs to figures/.
+Reads from data/processed/ and data/raw/ CSVs. Writes 300 DPI PNGs to figures/.
+Requires compute_gamma_crit.py to have been run first.
 """
 
 import csv
@@ -103,25 +103,8 @@ def fig1_exclusion_zone():
                 label = r['family_name']
             organisms.append((label, D, T, verdict))
     else:
-        print("  WARNING: Falling back to hardcoded data for Fig 1")
-        organisms = [
-            ('H. sapiens', 8, 9.3e6, 'T3req'),
-            ('B. floridae', 9, 4.0e8, 'T3req'),
-            ('GPCRs', 7.5, 9.3e6, 'T3req'),
-            ('Zinc fingers', 7.5, 9.3e6, 'T3req'),
-            ('ORs', 6.5, 9.3e6, 'T3req'),
-            ('Rice NBS-LRR', 5.5, 1.6e8, 'T3req'),
-            ('D. rerio Hox', 3.5, 1.0e9, 'Tmarg'),
-            ('A. thaliana RLKs', 5.0, 3.6e9, 'Tmarg'),
-            ('C. elegans NHR', 5, 6.26e10, 'Tmarg'),
-            ('D. melanogaster ORs', 4.0, 6.52e9, 'Tmarg'),
-            ('E. coli ABC', 3, 2.04e13, 'T2ok'),
-            ('S. cerevisiae kin', 4, 3.29e12, 'Tmarg'),
-            ('S. pombe kin', 3, 2.19e12, 'T2ok'),
-            ('M. jannaschii MCR', 2, 1.75e13, 'T2ok'),
-            ('H. salinarum Htr', 3, 1.75e12, 'T2ok'),
-            ('S. solfataricus GH', 3, 6.57e12, 'T2ok'),
-        ]
+        print("  ERROR: f15_scorecard.csv not found. Run compute_gamma_crit.py first.")
+        return
 
     fig, ax = plt.subplots(figsize=(7, 5))
 
@@ -175,15 +158,8 @@ def fig2_gamma_crit_bars():
             if r['F15_verdict'] == 'T3req':
                 t3req.append((r['system'], float(r['gamma_crit'])))
     else:
-        print("  WARNING: Falling back to hardcoded data for Fig 2")
-        t3req = [
-            ('Protein kinases', 7.4),
-            ('Amphioxus TLR', 9.0),
-            ('GPCR superfamily', 11),
-            ('Zinc finger TFs', 11),
-            ('Olfactory receptors', 18),
-            ('Rice NBS-LRR', 23),
-        ]
+        print("  ERROR: gamma_crit_table.csv not found. Run compute_gamma_crit.py first.")
+        return
 
     # Sort by gamma_crit
     t3req.sort(key=lambda x: x[1])
@@ -259,20 +235,8 @@ def fig3_deep_families():
             d_wgd = wgd_lookup.get(name, d_raw)
             families.append((name, d_raw, d_wgd))
     else:
-        print("  WARNING: Falling back to hardcoded data for Fig 3")
-        families = [
-            ('Amphioxus TLR', 9, 9),
-            ('Protein kinases', 8, 8),
-            ('GPCR superfamily', 7.5, 7.5),
-            ('Zinc finger TFs', 7.5, 7.5),
-            ('Olfactory receptors', 6.5, 6.5),
-            ('Homeodomain TFs', 6.5, 5.5),
-            ('Cytochrome P450', 6.5, 6.5),
-            ('Immunoglobulin SF', 6.5, 6.5),
-            ('Hox clusters', 5.5, 4.5),
-            ('bHLH TFs', 5.5, 4.5),
-            ('ABC transporters', 5, 5),
-        ]
+        print("  ERROR: deep_paralog_families.csv not found. Check data/raw/ directory.")
+        return
 
     # Sort by D_raw descending
     families.sort(key=lambda x: x[1], reverse=True)
@@ -401,21 +365,8 @@ def fig4_physical_vs_bio():
                 # use T directly as proxy (consistent with original figure)
                 bio.append((f"{label} (D={d_fam})", d_fam, T))
     else:
-        print("  WARNING: Falling back to hardcoded data for Fig 4")
-        physical = [
-            ('Snowflake', 5.5, 1e-4),
-            ('Turbulence', 12, 1e-5),
-            ('River networks', 8, 1e7),
-            ('Coastlines', 15, 1e8),
-            ('Cosmic structure', 3.5, 1.3e10),
-            ('Convection', 2.5, 1e-2),
-        ]
-        bio = [
-            ('Kinases (D=8)', 8, 2.5e8),
-            ('Amphioxus TLR (D=9)', 9, 5.5e8),
-            ('GPCRs (D=7.5)', 7.5, 1e9),
-            ('Lung bronchial (D=23)', 23, 5e8),
-        ]
+        print("  ERROR: physical_fractals.csv and/or f15_scorecard.csv not found. Run compute_gamma_crit.py first.")
+        return
 
     fig, ax = plt.subplots(figsize=(6, 5))
 
@@ -469,15 +420,8 @@ def fig5_two_regime_gamma():
             if r['F15_verdict'] == 'T3req':
                 gc_vals.append((r['system'], float(r['gamma_crit'])))
     else:
-        print("  WARNING: Falling back to hardcoded data for Fig 5")
-        gc_vals = [
-            ('Kinases', 7.4),
-            ('Amphioxus TLR', 9.0),
-            ('GPCRs', 11),
-            ('Zinc fingers', 11),
-            ('ORs', 18),
-            ('NBS-LRR', 23),
-        ]
+        print("  ERROR: gamma_crit_table.csv not found. Run compute_gamma_crit.py first.")
+        return
 
     fig, ax = plt.subplots(figsize=(8, 3))
 
@@ -554,13 +498,8 @@ def fig6_d_distribution():
             d_dist[org] = counts
             ordered_species.append(org)
     else:
-        print("  WARNING: Falling back to hardcoded data for Fig 6")
-        d_dist = {
-            'H. sapiens': [3586, 290, 40, 4],
-            'A. thaliana': [7000, 1000, 200, 50],
-            'E. coli': [400, 45, 7, 0],
-        }
-        ordered_species = list(d_dist.keys())
+        print("  ERROR: d_distributions.csv not found. Check data/raw/ directory.")
+        return
 
     thresholds = ['\u2265 1', '\u2265 3', '\u2265 5', '\u2265 8']
 
@@ -618,15 +557,8 @@ def fig7_sensitivity():
                 gc_hi = T ** (1.0 / (D - 1)) if D > 1 else gc * 2  # D-1 gives higher gamma
                 sensitivity.append((name, gc, gc_lo, gc_hi))
     else:
-        print("  WARNING: Falling back to hardcoded data for Fig 7")
-        sensitivity = [
-            ('Kinases', 7.4, 5.4, 13.0),
-            ('Amphioxus TLR', 9.0, 6.3, 14.1),
-            ('GPCRs', 11, 8.0, 17.6),
-            ('Zinc fingers', 11, 8.0, 17.6),
-            ('ORs', 18, 13, 28),
-            ('NBS-LRR', 23, 16, 36),
-        ]
+        print("  ERROR: gamma_crit_table.csv not found. Run compute_gamma_crit.py first.")
+        return
 
     # Sort by gc ascending
     sensitivity.sort(key=lambda x: x[1])
@@ -697,10 +629,8 @@ def fig8_classification_pie():
             sizes.append(count)
             colors.append(cat_colors.get(cat, '#aaaaaa'))
     else:
-        print("  WARNING: Falling back to hardcoded data for Fig 8")
-        labels = ['T3req', 'Tmarg', 'T2ok', 'Tna', 'Tmarg\u2020']
-        sizes = [6, 22, 24, 25, 12]
-        colors = ['#cc2222', '#dd8800', '#2266bb', '#888888', '#ccbb00']
+        print("  ERROR: classification_summary.csv not found. Run compute_gamma_crit.py first.")
+        return
 
     total = sum(sizes)
 

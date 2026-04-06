@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-TIME-AR-001 v3.1.1: Compute gamma_crit and F15 classifications for ALL systems.
+TIME-AR-001 v3.1.2: Compute gamma_crit and F15 classifications for ALL systems.
 
 The temporal exclusion criterion: gamma^D > T
 gamma_crit = T^(1/D) — the minimum efficiency gap at which exclusion activates.
@@ -13,7 +13,7 @@ Classification tiers:
   Tmarg_cultural : cultural systems (LANG, COMP, ECON domains)
   T3req_bio      : biological cross-domain systems with deep hierarchy
 
-v3.1.1 refactored:
+v3.1.2 (formerly v3.1.1) refactored:
   - Organism-level values DERIVED from raw CSVs (item 3)
   - Named override rules with audit trail (item 4)
   - Computed baseline + final columns in master scorecard (items 4, 17)
@@ -142,7 +142,7 @@ def _get_field(organism, raw_orgs, field, default=''):
 
 def main():
     print("=" * 70)
-    print("TIME-AR-001 v3.1.1: gamma_crit Computation (refactored)")
+    print("TIME-AR-001 v3.1.2: gamma_crit Computation (refactored)")
     print("=" * 70)
 
     # ══════════════════════════════════════════════════════════════════════
@@ -184,6 +184,9 @@ def main():
     raw_family_map = load_csv('organism_family_map.csv')
     print(f"  organism_family_map.csv: {len(raw_family_map)} rows")
 
+    raw_confirmed_deep = load_csv('confirmed_deep_families.csv')
+    print(f"  confirmed_deep_families.csv: {len(raw_confirmed_deep)} rows")
+
     # ══════════════════════════════════════════════════════════════════════
     # 2. Build indexes from raw data (item 3)
     # ══════════════════════════════════════════════════════════════════════
@@ -221,19 +224,15 @@ def main():
             'notes': row.get('notes', ''),
         }
 
-    # v3.1 confirmed T3req deep families (family-level, not organism-level)
-    T3REQ_FAMILIES = {
-        "Protein kinases",
-        "Amphioxus TLR",
-        "GPCR superfamily",
-        "Zinc finger TFs (KRAB-ZF)",
-        "Olfactory receptors",
-        "Rice NBS-LRR",
-    }
+    # v3.1 confirmed T3req deep families — loaded from confirmed_deep_families.csv
+    T3REQ_FAMILIES = {row['family'] for row in raw_confirmed_deep if row['confirmed_t3req'] == 'yes'}
+
+    # T_source_organism from confirmed_deep_families.csv: maps family -> organism for T lookup
+    T3REQ_T_SOURCE = {row['family']: row['T_source_organism'] for row in raw_confirmed_deep}
 
     # Deep family classification data — derived from deep_paralog_families.csv + time context
-    # T defaults: human families use H. sapiens T; Amphioxus uses B. floridae T;
-    # Rice NBS-LRR uses O. sativa T; ABC transporters use E. coli T.
+    # T_source_organism from confirmed_deep_families.csv is used where available;
+    # remaining families fall back to DEEP_FAMILY_T_MAP defaults.
     DEEP_FAMILY_T_MAP = {
         "Protein kinases":           t_midpoint_by_org.get('H. sapiens', 9.3e6),
         "GPCR superfamily":          t_midpoint_by_org.get('H. sapiens', 9.3e6),
@@ -397,15 +396,21 @@ def main():
         if D is None:
             continue
 
-        # Determine T from the deep family T map
-        T = DEEP_FAMILY_T_MAP.get(fam)
+        # Determine T: prefer T_source_organism from confirmed_deep_families.csv,
+        # then fall back to DEEP_FAMILY_T_MAP, then default to H. sapiens T
+        if fam in T3REQ_T_SOURCE:
+            T = t_midpoint_by_org.get(T3REQ_T_SOURCE[fam])
+        else:
+            T = DEEP_FAMILY_T_MAP.get(fam)
         if T is None:
             # Default to H. sapiens T
             T = t_midpoint_by_org.get('H. sapiens', 9.3e6)
 
-        # Check WGD adjustments for this family (use H. sapiens context for human families)
+        # Check WGD adjustments for this family
+        # Use organism context from confirmed_deep_families.csv if available, else H. sapiens
+        wgd_org = T3REQ_T_SOURCE.get(fam, 'H. sapiens')
         D_used = D
-        wgd_key = ('H. sapiens', fam)
+        wgd_key = (wgd_org, fam)
         wgd_adj_val = ''
         if wgd_key in wgd_index:
             wgd_info = wgd_index[wgd_key]
@@ -445,31 +450,6 @@ def main():
         })
         deep_family_count += 1
 
-    # Add Rice NBS-LRR as a separate T3req entry (from O. sativa lineage)
-    rice_T = t_midpoint_by_org.get('O. sativa', 1.6e8)
-    rice_D = 5.5
-    rice_gc = compute_gamma_crit(rice_T, rice_D)
-    master.append({
-        'system_id': make_system_id('FAM', 'Rice NBS-LRR'),
-        'system': 'Rice NBS-LRR',
-        'domain': 'BIO',
-        'system_type': 'deep_family',
-        'D_input': rice_D,
-        'D_wgd_adj': '',
-        'T_midpoint': rice_T,
-        'gamma_crit_computed': round(rice_gc, 1),
-        'gamma_crit_final': round(rice_gc, 1),
-        'verdict_computed': 'T3req',
-        'verdict_final': 'T3req',
-        'F15a': '',
-        'F15b': 'T3req',
-        'classification_basis': f'Deep paralog family D={rice_D}; O. sativa lineage',
-        'wgd_adjusted': 'no',
-        'override_rule_id': '',
-        'override_reason': '',
-        'primary_citation': 'Zhou et al. 2004 Mol Genet Genomics 271:402-415',
-    })
-    deep_family_count += 1
     print(f"  {deep_family_count} deep families processed")
 
     # --- 3c. Cross-domain temporal systems ---

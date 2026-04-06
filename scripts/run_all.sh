@@ -31,6 +31,10 @@ echo "Step 4: Building supplementary DOCX..."
 python3 build_docx.py || echo "WARNING: DOCX build failed (python-docx may not be installed). Run: pip3 install python-docx"
 echo ""
 
+echo "Step 5: Running validation checks..."
+python3 validate.py
+echo ""
+
 echo "============================================================="
 echo "Replication complete. Output files:"
 echo "  data/processed/ - All computed data (master_scorecard.csv + 5 others)"
