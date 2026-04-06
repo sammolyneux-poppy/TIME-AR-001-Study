@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-TIME-AR-001 v3.1.2: Compute gamma_crit and F15 classifications for ALL systems.
+TIME-AR-001: Compute gamma_crit and F15 classifications for all systems.
 
 The temporal exclusion criterion: gamma^D > T
 gamma_crit = T^(1/D) — the minimum efficiency gap at which exclusion activates.
@@ -13,14 +13,9 @@ Classification tiers:
   Tmarg_cultural : cultural systems (LANG, COMP, ECON domains)
   T3req_bio      : biological cross-domain systems with deep hierarchy
 
-v3.1.2 (formerly v3.1.1) refactored:
-  - Organism-level values DERIVED from raw CSVs (item 3)
-  - Named override rules with audit trail (item 4)
-  - Computed baseline + final columns in master scorecard (items 4, 17)
-  - Stable system IDs (item 9)
-  - Explicit dedupe report (item 10)
-  - WGD provenance from wgd_adjusted_d.csv (item 11)
-  - T3req_combined row in classification summary (item 16)
+All organism-level values are derived from raw CSVs. Named override rules are
+applied in order; each override is logged with rule ID and reason in the master
+scorecard. WGD adjustments are sourced from wgd_adjusted_d.csv.
 """
 
 import csv

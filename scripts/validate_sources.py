@@ -541,11 +541,11 @@ def write_verification_summary(checks):
     n_reg = len(reg_rows)
 
     today = date.today().isoformat()
-    content = f"""# TIME-AR-001 Source Verification Summary
+    content = f"""# TIME-AR-001 Citation Provenance Summary
 
 **Generated:** {today}
-**Study:** TIME-AR-001 — Temporal Feasibility Study
-**Version:** v3.2 (citation remediation)
+**Study:** TIME-AR-001 — Temporal Admissible Region Study
+**Version:** v3.2
 
 ---
 
@@ -564,7 +564,8 @@ def write_verification_summary(checks):
 
 ## Evidence Mode Classification
 
-All 13 raw CSVs now carry `evidence_mode` and `computational_role` columns.
+All 13 raw CSVs carry `evidence_mode` and `computational_role` columns classifying
+each value's evidentiary basis and role in the computational pipeline.
 
 | Evidence Mode | Meaning |
 |---|---|
@@ -583,7 +584,7 @@ All 13 raw CSVs now carry `evidence_mode` and `computational_role` columns.
 ## Authority Files
 
 `confirmed_deep_families.csv` and `organism_family_map.csv` are marked
-`authority_file = yes` on every row. These are **internal study authority files**,
+`authority_file = yes` on every row. These are internal study authority files,
 not primary evidence sources. Each row's claims are backed by entries in
 `time_evidence_matrix.csv` and `depth_evidence.csv`.
 
@@ -597,25 +598,24 @@ include `access_date` and `archive_url` to freeze extracted values.
 
 ---
 
-## New Provenance Files
+## Provenance Files
 
 | File | Purpose | Rows |
 |---|---|---|
-| `data/raw/source_registry.csv` | All canonical sources | {n_reg} |
-| `data/raw/time_budget_evidence.csv` | Clade-age + gen-time provenance | 20 |
-| `data/raw/time_evidence_matrix.csv` | Field-level evidence for P10 priority systems | 30+ |
-| `data/raw/depth_evidence.csv` | D-value provenance per system | 26 |
+| `data/raw/source_registry.csv` | Canonical source registry with DOIs and access metadata | {n_reg} |
+| `data/raw/time_budget_evidence.csv` | Clade-age and generation-time provenance per organism | 20 |
+| `data/raw/time_evidence_matrix.csv` | Field-level evidence for priority systems | 30+ |
+| `data/raw/depth_evidence.csv` | D-value provenance per system including WGD derivation | 26 |
 
 ---
 
-## Re-audit Decision Buckets
+## Evidence Reconstruction Status
 
-| Bucket | Applies to |
+| Status | Applies to |
 |---|---|
 | **Fully externally reconstructible** | 6 T3req gene families (kinases, TLR, GPCR, ZF, OR, NBS-LRR) |
-| **Partially externally reconstructible** | Most organism T-budget rows (clade age from TimeTree with snapshot) |
-| **Curated-input only** | Organism-level D_consensus; cross-domain T estimates |
-| **Needs reclassification or decomposition** | None identified |
+| **Partially externally reconstructible** | Organism T-budget rows (clade age from TimeTree with access snapshot) |
+| **Curated-input** | Organism-level D_consensus; cross-domain T estimates |
 
 """
 

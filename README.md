@@ -4,7 +4,7 @@
 
 ## Overview
 
-This repository contains the complete replication package for the TIME-AR-001 temporal admissible region analysis — a cross-domain empirical study assessing whether observed hierarchical complexity in natural and cultural systems could plausibly have arisen within available evolutionary time using sub-Tier-3 operators. The executable computation materializes 92 systems from raw data. The broader manuscript discussion in `docs/TIME_AR_001_Report.md` additionally discusses conceptual cases not yet included in the computational pipeline.
+This repository contains the complete replication package for the TIME-AR-001 temporal admissible region analysis — a cross-domain empirical study assessing whether observed hierarchical complexity in natural and cultural systems could plausibly have arisen within available evolutionary time using sub-Tier-3 operators. The executable computation materializes 92 systems from raw data. The broader manuscript discussion in `docs/TIME_AR_001_Report.md` additionally discusses conceptual cases not included in the computational pipeline.
 
 The study introduces feature **F15 (Temporal Feasibility)**, split into:
 - **F15a** (organism-level): uses organism-level hierarchy depth D and evolutionary time budget T
@@ -14,7 +14,7 @@ The formal basis is the `temporal_separation_capstone` theorem (TIME-SPEC-001), 
 - **Tier 2 (IndelMutation):** genome length ≤ g₀ + T × k (linear growth)
 - **Tier 3 (RecursiveMutation):** genome length ≥ 2^n in n steps (exponential growth)
 
-## Key Results (v3.1.2)
+## Key Results
 
 **6 gene families with F15b = T3req (γ_crit ≤ 100):**
 
@@ -39,7 +39,7 @@ The formal basis is the `temporal_separation_capstone` theorem (TIME-SPEC-001), 
 | Tmarg_cultural | 9 | 9.8% | Cultural systems (contingency flag) |
 
 **Headline results:**
-1. **Human protein kinases (D=8, γ_crit=7.4):** Any efficiency gap >7.4× triggers temporal exclusion. Within the empirically observed recombination advantage range (γ ~ 2-10).
+1. **Human protein kinases (D=8, γ_crit=7.4):** Any efficiency gap >7.4× triggers temporal exclusion. Within the empirically observed recombination advantage range (γ ~ 2–10).
 2. **Amphioxus TLR (D=9, γ_crit=9.0, zero WGD):** Proves deep hierarchy is achievable without whole-genome duplication, through tandem duplication alone.
 
 **Rank-order validation:** All 6 T3req families have D ≥ 5.0; all 25 T2ok assignments have D ≤ 4.5. Fisher exact test (two-sided), p = 1.36 × 10⁻⁶ (no overlap).
@@ -51,33 +51,37 @@ TIME-AR-001-Study/
 ├── README.md                    # This file
 ├── LICENSE
 ├── docs/
-│   ├── TIME_AR_001_Report.md    # Complete research report (v3.1.2)
-│   ├── TIME_AR_001_Report.docx  # DOCX with embedded figures
-│   ├── TIME_AR_001_Tables.docx  # Supplementary tables (generated)
-│   ├── ROUND2_REVISION_SUMMARY.md
-│   ├── V3_REVISION_SUMMARY.md
-│   └── TIME-AR-001-spec.md      # Original study specification
+│   ├── TIME_AR_001_Report.md        # Complete research report (v3.2)
+│   ├── TIME_AR_001_Report.docx      # DOCX with embedded figures
+│   ├── TIME_AR_001_Tables.docx      # Supplementary tables (generated)
+│   └── SOURCE_VERIFICATION_SUMMARY.md  # Citation provenance audit (generated)
 ├── data/
 │   ├── raw/
-│   │   ├── organism_hierarchy_depths.csv    # D measurements (2 methods, 16 organisms, 17 lines)
+│   │   ├── organism_hierarchy_depths.csv    # D measurements (2 methods, 16 organisms)
 │   │   ├── organism_family_map.csv          # Organism-to-deepest-family mapping (16 entries)
-│   │   ├── deep_paralog_families.csv        # 12 deepest gene families (incl. amphioxus TLR + Rice NBS-LRR)
-│   │   ├── time_budgets.csv                 # T (conservative/mid/liberal) per organism (20 lines)
-│   │   ├── shallow_systems.csv              # 20 T2ok/Tna systems
-│   │   ├── physical_fractals.csv            # 10 physical systems (9 negative + 1 positive control)
-│   │   ├── cross_domain_temporal.csv        # 26 LANG/COMP/ECON/INFO/NEUR systems
-│   │   ├── gamma_calibration.csv            # Empirical gamma estimates from literature (6 entries)
-│   │   ├── d_distributions.csv              # D distribution for 3 organisms
+│   │   ├── confirmed_deep_families.csv      # 6 confirmed T3req gene families (authority file)
+│   │   ├── deep_paralog_families.csv        # 12 deepest gene families with D and WGD status
+│   │   ├── time_budgets.csv                 # T (conservative/mid/liberal) per organism (20 organisms)
+│   │   ├── time_budget_evidence.csv         # Clade-age and gen-time provenance (20 organisms)
 │   │   ├── wgd_adjusted_d.csv              # WGD-adjusted D values (15 family entries)
+│   │   ├── d_distributions.csv             # D distribution for 3 organisms
+│   │   ├── shallow_systems.csv             # 20 T2ok/Tna systems
+│   │   ├── physical_fractals.csv           # 10 physical systems (9 negative + 1 positive control)
+│   │   ├── cross_domain_temporal.csv       # 26 LANG/COMP/ECON/INFO/NEUR systems
 │   │   ├── adversarial_cases.csv           # 8 adversarial test cases
-│   │   └── cortical_families.csv           # 4 cortical-specification gene families
+│   │   ├── cortical_families.csv           # 4 cortical-specification gene families
+│   │   ├── gamma_calibration.csv           # Empirical gamma estimates from literature (6 entries)
+│   │   ├── source_registry.csv             # 103 canonical sources with DOIs, URLs, access dates
+│   │   ├── time_evidence_matrix.csv        # Field-level evidence for P10 priority systems
+│   │   └── depth_evidence.csv              # D-value provenance per system (26 entries)
 │   └── processed/                          # All generated by compute_gamma_crit.py
 │       ├── master_scorecard.csv            # Authoritative: 1 row per system (92 systems)
 │       ├── f15_scorecard.csv               # Organism-level F15a/F15b (16 rows)
 │       ├── gamma_crit_table.csv            # All systems with γ_crit, sorted ascending (47 entries)
 │       ├── temporal_exclusion_zones.csv    # γ^D at γ=2,10,100 for organisms (16 rows)
 │       ├── classification_summary.csv      # Verdict counts (6 categories)
-│       └── fisher_test_result.csv          # Fisher exact test output
+│       ├── fisher_test_result.csv          # Fisher exact test output
+│       └── source_validation_report.csv    # Citation validation results (19 checks)
 ├── figures/                                # All generated by generate_figures.py
 │   ├── fig_T1_exclusion_zone.png           # D vs log(T) with γ contours
 │   ├── fig_T2_gamma_crit_bars.png          # γ_crit for T3req families
@@ -87,21 +91,21 @@ TIME-AR-001-Study/
 │   ├── fig_T6_d_distribution.png           # Gene family depth distribution
 │   ├── fig_T7_sensitivity.png              # γ_crit sensitivity to D ± 1
 │   └── fig_T8_classification_pie.png       # Classification distribution
-├── scripts/
-│   ├── compute_gamma_crit.py               # Core computation: all 92 pipeline systems
-│   ├── fisher_test.py                      # Fisher exact test reproduction
-│   ├── generate_figures.py                 # All figure generation (matplotlib)
-│   ├── build_docx.py                       # Supplementary DOCX builder
-│   ├── validate.py                         # Post-pipeline validation checks
-│   └── run_all.sh                          # Complete replication script
-└── LICENSE
+└── scripts/
+    ├── compute_gamma_crit.py               # Core computation: all 92 pipeline systems
+    ├── fisher_test.py                      # Fisher exact test reproduction
+    ├── generate_figures.py                 # All figure generation (matplotlib)
+    ├── build_docx.py                       # Supplementary DOCX builder
+    ├── validate.py                         # Post-pipeline validation (25 checks)
+    ├── validate_sources.py                 # Citation provenance validation (19 checks)
+    └── run_all.sh                          # Complete replication script
 ```
 
 ## Quick Start (Replication)
 
 ```bash
 # Clone the repository
-git clone https://github.com/sammolyneux-poppy/TIME-AR-001-Study.git
+git clone <repository-url>
 cd TIME-AR-001-Study
 
 # Install dependencies
@@ -115,6 +119,8 @@ python3 scripts/compute_gamma_crit.py    # Core computation
 python3 scripts/fisher_test.py           # Statistical test
 python3 scripts/generate_figures.py      # Figures
 python3 scripts/build_docx.py            # Supplementary DOCX
+python3 scripts/validate.py              # Validation checks
+python3 scripts/validate_sources.py      # Citation provenance validation
 ```
 
 **Output:** All processed CSVs in `data/processed/`, figures in `figures/`, supplementary DOCX in `docs/`.
@@ -126,21 +132,13 @@ python3 scripts/build_docx.py            # Supplementary DOCX
 - scipy (Fisher test; falls back to manual computation if unavailable)
 - python-docx (DOCX output; falls back to text if unavailable)
 
-## v3.1.2 Count Reconciliation (current)
-
-v3.1.2 reconciles README/report counts with the authoritative pipeline output (classification_summary.csv): T2ok=25, Tmarg=22. Updates Fisher table to 6 T3req vs 25 T2ok. No classification logic changes from v3.1.1.
-
-## v3.1.1 Arithmetic Correction (historical)
-
-v3.1.1 corrected a systematic arithmetic error in organism-level γ_crit values present in v3.1. All organism-level gamma_crit values are now computed as `T^(1/D)` using the stated D_consensus and T_midpoint. Three organism-level classifications changed (C. elegans, S. cerevisiae, P. aeruginosa: T2ok → Tmarg). No family-level (F15b) classifications changed. The 6 T3req gene family results are unaffected.
-
 ## Executable vs Conceptual Scope
 
 The computational pipeline (`scripts/run_all.sh`) produces a master scorecard of 92 systems derived from 10 structured input files. The manuscript (`docs/TIME_AR_001_Report.md`) additionally discusses ~110 systems including conceptual cases, literature-derived assessments, and historical reclassifications. Summary statistics in the README and abstract are based on the executable pipeline output.
 
 ## Classification Derivation Policy
 
-**Deep family status:** A gene family is classified as T3req (requiring Tier-3 dynamics) when gamma_crit <= 100 AND the family has established phylogenetic evidence of deep hierarchy. The authoritative list of confirmed deep families is `data/raw/confirmed_deep_families.csv` (the 6 families listed in the Key Results table above).
+**Deep family status:** A gene family is classified as T3req (requiring Tier-3 dynamics) when gamma_crit ≤ 100 AND the family has established phylogenetic evidence of deep hierarchy. The authoritative list of confirmed deep families is `data/raw/confirmed_deep_families.csv` (the 6 families listed in the Key Results table above).
 
 **Organism vs family verdicts:** F15a uses organism-level D_consensus to compute gamma_crit and assign a verdict. F15b uses the deepest gene family's D within the organism. The two verdicts are independent; an organism may be T2ok at organism level while its deepest family is T3req at family level.
 
@@ -152,13 +150,14 @@ The computational pipeline (`scripts/run_all.sh`) produces a master scorecard of
 
 All overrides are logged in the `override_rule_id` and `override_reason` columns of `master_scorecard.csv`.
 
-**Computed to Final pipeline:** `gamma_crit_computed` (from T^(1/D)) -> `verdict_computed` (threshold-based) -> override rules -> `verdict_final` (authoritative classification).
+**Computed to Final pipeline:** `gamma_crit_computed` (from T^(1/D)) → `verdict_computed` (threshold-based) → override rules → `verdict_final` (authoritative classification).
 
 ## Data Provenance Tiers
 
 **Evidence-grade (directly extracted from published sources):**
 - `organism_hierarchy_depths.csv` — D measurements from cited phylogenetic studies
 - `time_budgets.csv` — T calculations from cited divergence times and generation times
+- `time_budget_evidence.csv` — field-level provenance for each clade-age and gen-time value
 - `deep_paralog_families.csv` — gene family depths from cited publications
 - `gamma_calibration.csv` — experimental gamma estimates from cited experiments
 - `d_distributions.csv` — family size distributions from cited databases
@@ -172,15 +171,24 @@ All overrides are logged in the `override_rule_id` and `override_reason` columns
 - `wgd_adjusted_d.csv` — WGD adjustments compiled from literature
 - `organism_family_map.csv` — organism-to-deepest-family mapping
 
+**Source provenance:**
+- `source_registry.csv` — 103 canonical sources with DOIs, URLs, and access dates
+- `time_evidence_matrix.csv` — field-level evidence for priority systems
+- `depth_evidence.csv` — D-value provenance per system
+
 **Derived (generated by pipeline):**
 - All files in `data/processed/`
 
 **DOCX reproducibility:** The DOCX file (`docs/TIME_AR_001_Tables.docx`) is regenerated deterministically by `build_docx.py`. Metadata (author, timestamps) and ZIP entry order are fixed, so repeated runs on unchanged inputs produce byte-identical output.
 
+## Citation Validation
+
+Running `python3 scripts/validate_sources.py` executes 19 checks (15 HARD, 4 soft) covering evidence-mode classification across all 13 raw CSVs, source-registry linkage, time-budget evidence synchronization, and cross-domain provenance completeness. Results are written to `data/processed/source_validation_report.csv` and `docs/SOURCE_VERIFICATION_SUMMARY.md`.
+
 ## Related Repositories
 
 - **FP4 Lean 4 Proof:** The formal proof establishing computational universality of recursive genome evolution
-- **UTM-AR-001-Study:** [UTM Admissible Regions Study](https://github.com/sammolyneux-poppy/UTM-AR-001-Study) — companion cross-domain validation (F1-F14)
+- **UTM-AR-001-Study:** Companion cross-domain validation study (F1–F14 admissibility features)
 
 ## Citation
 
