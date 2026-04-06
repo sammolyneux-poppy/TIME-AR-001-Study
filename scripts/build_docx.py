@@ -5,8 +5,11 @@ Generates a supplementary DOCX with key data tables.
 """
 
 import csv
+import datetime
 import os
 import sys
+import zipfile
+import io
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data', 'processed')
 DOCS_DIR = os.path.join(os.path.dirname(__file__), '..', 'docs')
@@ -19,6 +22,28 @@ try:
     HAS_DOCX = True
 except ImportError:
     HAS_DOCX = False
+
+# Fixed timestamp for deterministic ZIP output (2026-04-06 00:00:00)
+FIXED_ZIP_DATE = (2026, 4, 6, 0, 0, 0)
+
+
+def normalize_docx_zip(src_buf, out_path):
+    """Repack a DOCX (ZIP) with fixed timestamps for byte-identical output.
+
+    Reads all entries from src_buf (BytesIO), writes to out_path with:
+    - Fixed date_time on every ZipInfo entry
+    - Sorted entry order for determinism
+    - Consistent compression level
+    """
+    with zipfile.ZipFile(src_buf, 'r') as zin:
+        entries = sorted(zin.namelist())
+        with zipfile.ZipFile(out_path, 'w', zipfile.ZIP_DEFLATED) as zout:
+            for name in entries:
+                data = zin.read(name)
+                info = zipfile.ZipInfo(filename=name, date_time=FIXED_ZIP_DATE)
+                info.compress_type = zipfile.ZIP_DEFLATED
+                zout.writestr(info, data)
+
 
 def load_csv(filename):
     path = os.path.join(DATA_DIR, filename)
@@ -127,9 +152,19 @@ def build_docx():
         else:
             doc.add_paragraph(f'{caption} — [figure not yet generated]')
 
-    # Save
+    # Set deterministic metadata
+    doc.core_properties.created = datetime.datetime(2026, 4, 6, 0, 0, 0)
+    doc.core_properties.modified = datetime.datetime(2026, 4, 6, 0, 0, 0)
+    doc.core_properties.last_modified_by = "TIME-AR-001 Pipeline"
+    doc.core_properties.author = "TIME-AR-001 Pipeline"
+    doc.core_properties.revision = 1
+
+    # Save to temp buffer, then normalize ZIP timestamps
     out_path = os.path.join(DOCS_DIR, 'TIME_AR_001_Tables.docx')
-    doc.save(out_path)
+    buf = io.BytesIO()
+    doc.save(buf)
+    buf.seek(0)
+    normalize_docx_zip(buf, out_path)
     print(f"DOCX written to: {out_path}")
 
 def build_text_summary():
