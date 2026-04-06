@@ -553,7 +553,7 @@ Four new files provide the evidence layer required for external reconstruction:
 
 | File | Purpose | Rows |
 |---|---|---|
-| `data/raw/source_registry.csv` | Canonical source registry with DOIs, URLs, access dates | 84 |
+| `data/raw/source_registry.csv` | Canonical source registry with DOIs, URLs, access dates | 103 |
 | `data/raw/time_budget_evidence.csv` | Explicit clade_age and gen_time provenance for all 21 organisms | 20 |
 | `data/raw/time_evidence_matrix.csv` | Field-level evidence for P10 priority systems (T3req families + key organisms) | 30+ |
 | `data/raw/depth_evidence.csv` | D-value provenance per system including measurement rule and WGD derivation | 26 |

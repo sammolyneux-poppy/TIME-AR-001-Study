@@ -17,3 +17,4 @@ tbe_clade_age_sync,time_budget_evidence.csv clade_age_Mya matches time_budgets.c
 tbe_gen_time_sync,time_budget_evidence.csv gen_time_hr matches time_budgets.csv for each organism,yes,PASS,All 20 organisms have matching gen_time_hr
 cdt_computational_role,All cross_domain_temporal.csv rows have computational_role = executable_input,yes,PASS,All 26 CDT rows have computational_role = executable_input
 cdt_tna_consistency,CDT Tna rows have T_evidence_mode=not_applicable; scored rows have explicit T_evidence_mode,yes,PASS,All 26 CDT rows internally consistent (Tna↔not_applicable)
+cdt_d_provenance_status,Every non-Tna CDT row has D_provenance_status; canonical rows have resolving D_source_id,yes,PASS,"18 scored CDT rows: canonical=7, curated_synthesis=11, analogy_only=0"

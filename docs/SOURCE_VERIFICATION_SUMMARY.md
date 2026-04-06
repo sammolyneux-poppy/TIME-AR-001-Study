@@ -8,7 +8,7 @@
 
 ## Validation Results
 
-**18/18 checks passed** | **0 failed**
+**19/19 checks passed** | **0 failed**
 
 | Check | Hard/Soft | Result |
 |---|---|---|
@@ -30,6 +30,7 @@
 | tbe_gen_time_sync | HARD | ✓ PASS |
 | cdt_computational_role | HARD | ✓ PASS |
 | cdt_tna_consistency | HARD | ✓ PASS |
+| cdt_d_provenance_status | HARD | ✓ PASS |
 
 ---
 

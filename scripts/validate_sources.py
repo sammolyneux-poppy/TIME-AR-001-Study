@@ -23,6 +23,7 @@ Checks:
   16. time_budget_evidence.csv gen_time_hr matches time_budgets.csv         [HARD]
   17. cross_domain_temporal.csv computational_role = executable_input       [HARD]
   18. CDT Tna rows have T_evidence_mode=not_applicable; scored rows don't   [HARD]
+  19. Every non-Tna CDT row has D_provenance_status; canonical → D_source_id [HARD]
 
 Produces:
   data/processed/source_validation_report.csv   — per-check pass/fail table
@@ -467,6 +468,42 @@ def run_checks():
             c.pass_(f"All {len(rows)} CDT rows internally consistent (Tna↔not_applicable)")
         else:
             c.fail(f"Inconsistencies: {bad[:5]}")
+    checks.append(c)
+
+    # ---- Check 19: CDT D_provenance_status completeness for non-Tna rows ----
+    c = Check("cdt_d_provenance_status",
+              "Every non-Tna CDT row has D_provenance_status; canonical rows have resolving D_source_id")
+    reg_rows = read_csv(REGISTRY_PATH)
+    rows     = read_csv(CDT_PATH)
+    if reg_rows is None or rows is None:
+        c.fail("source_registry.csv or cross_domain_temporal.csv not found")
+    else:
+        registry_ids = {r.get("source_id", "").strip() for r in reg_rows}
+        VALID_STATUSES = {"canonical", "curated_synthesis", "analogy_only"}
+        bad = []
+        for r in rows:
+            verdict = r.get("F15_verdict", "").strip()
+            if verdict == "Tna":
+                continue  # Tna rows exempt
+            status = r.get("D_provenance_status", "").strip()
+            system = r.get("system", "?")
+            if status not in VALID_STATUSES:
+                bad.append(f"{system}(missing/invalid D_provenance_status='{status}')")
+                continue
+            if status == "canonical":
+                d_src = r.get("D_source_id", "").strip()
+                if not d_src:
+                    bad.append(f"{system}(canonical but D_source_id blank)")
+                elif d_src not in registry_ids:
+                    bad.append(f"{system}(D_source_id='{d_src}' not in registry)")
+        if not bad:
+            scored = [r for r in rows if r.get("F15_verdict", "").strip() != "Tna"]
+            canonical_n = sum(1 for r in scored if r.get("D_provenance_status", "") == "canonical")
+            curated_n   = sum(1 for r in scored if r.get("D_provenance_status", "") == "curated_synthesis")
+            analogy_n   = sum(1 for r in scored if r.get("D_provenance_status", "") == "analogy_only")
+            c.pass_(f"{len(scored)} scored CDT rows: canonical={canonical_n}, curated_synthesis={curated_n}, analogy_only={analogy_n}")
+        else:
+            c.fail(f"{len(bad)} issues: {bad[:5]}")
     checks.append(c)
 
     return checks
