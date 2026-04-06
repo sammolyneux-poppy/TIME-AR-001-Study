@@ -1,0 +1,93 @@
+system,domain,system_type,D_input,D_wgd_adj,T_midpoint,gamma_crit,F15a,F15b,classification_basis,wgd_adjusted,override_note,primary_citation
+H. sapiens,Mammalia,organism,5.5,,9290000.0,18.5,Tmarg,T3req,Organism D=5.5; deepest family Kinases D=8.0,no,Organism-level conservative policy,Huntley et al. 2006 Genome Res 16:669-677
+D. rerio,Actinopterygii,organism,5.5,,1020000000.0,43.4,Tmarg,Tmarg,Organism D=5.5; deepest family Hox (WGD-adj D=3.5) D=3.5,yes,WGD-adjusted D=3.5 for Hox family,Amores et al. 1998 Science 282:1711-1714
+O. sativa,Plantae,organism,5.5,,160000000.0,31.0,Tmarg,T3req,Organism D=5.5; deepest family NBS-LRR D=5.5,no,,Zhou et al. 2004 Mol Genet Genomics 271:402-415
+A. thaliana,Plantae,organism,5.0,,3580000000.0,81.4,Tmarg,Tmarg,Organism D=5.0; deepest family RLKs D=5.0,no,Conservative override: gc=81.4 -> Tmarg,Shiu & Bleecker 2001 PNAS 98:10763-10768
+C. elegans,Nematoda,organism,4.5,,62600000000.0,250.7,Tmarg,Tmarg,Organism D=4.5; deepest family NHR D=5.0,no,,Robinson-Rechavi et al. 2005 Trends Genet 21:187-190
+D. melanogaster,Insecta,organism,4.0,,6520000000.0,284.2,Tmarg,Tmarg,Organism D=4.0; deepest family ORs D=4.0,no,,Robertson et al. 2003 PNAS 100:14537-14542
+E. coli,Bacteria,organism,3.0,,20400000000000.0,27323.9,T2ok,T2ok,Organism D=3.0; deepest family ABC transporters D=3.0,no,,Linton & Higgins 1998 Mol Microbiol 28:5-13
+S. cerevisiae,Fungi,organism,3.5,,3290000000000.0,3770.0,Tmarg,Tmarg,Organism D=3.5; deepest family Kinases D=4.0,no,,Manning et al. 2002 Science 298:1912-1934
+P. aeruginosa,Bacteria,organism,3.5,,10200000000000.0,5208.9,Tmarg,Tmarg,Organism D=3.5; deepest family Two-component D=4.0,no,,Stover et al. 2000 Nature 406:959-964
+S. pombe,Fungi,organism,3.0,,2190000000000.0,12986.2,T2ok,T2ok,Organism D=3.0; deepest family Kinases D=3.0,no,,Wood et al. 2002 Nature 415:871-880
+F. albicollis,Aves,organism,3.5,,75000000.0,177.8,Tmarg,Tmarg,Organism D=3.5; deepest family Kinases D=4.0,no,Conservative override: gc=93.1 -> Tmarg,Smeds et al. 2016 Genome Res 26:1158-1168
+D. discoideum,Amoebozoa,organism,3.5,,2190000000000.0,3356.1,Tmarg,Tmarg,Organism D=3.5; deepest family PKS D=4.0,no,,Eichinger et al. 2005 Nature 435:43-57
+S. solfataricus,Crenarchaeota,organism,2.5,,6570000000000.0,133975.7,T2ok,T2ok,Organism D=2.5; deepest family GH D=3.0,no,,She et al. 2001 PNAS 98:7835-7840
+M. jannaschii,Euryarchaeota,organism,2.0,,17500000000000.0,4183300.1,T2ok,T2ok,Organism D=2.0; deepest family MCR D=2.0,no,,Bult et al. 1996 Science 273:1058-1073
+H. salinarum,Euryarchaeota,organism,2.5,,1750000000000.0,78925.1,T2ok,T2ok,Organism D=2.5; deepest family Htr D=3.0,no,,Ng et al. 2000 PNAS 97:12176-12181
+B. floridae,Cephalochordata,organism,5.0,,400000000.0,52.5,Tmarg,T3req,Organism D=5.0; deepest family TLR D=9.0,no,,Huang et al. 2008 J Immunol 180:6183-6191
+Protein kinases,BIO,deep_family,8.0,,9300000.0,7.4,,T3req,Deep paralog family D=8.0,no,,Manning et al. 2002 Science 298:1912-1934
+GPCR superfamily,BIO,deep_family,7.5,,9300000.0,11.0,,T3req,Deep paralog family D=7.5,no,,Fredriksson et al. 2003 Mol Pharmacol 63:1256-1272
+Zinc finger TFs (KRAB-ZF),BIO,deep_family,7.5,,9300000.0,11.0,,T3req,Deep paralog family D=7.5,no,,Imbeault et al. 2017 Nature 543:550-554
+Olfactory receptors,BIO,deep_family,6.5,,9300000.0,18.0,,T3req,Deep paralog family D=6.5,no,,Niimura & Nei 2003 PNAS 100:12235-12240
+Homeodomain TFs,BIO,deep_family,6.5,,9300000.0,11.8,,Tmarg,Deep paralog family D=6.5,no,,Holland et al. 2007 BMC Biol 5:47
+Cytochrome P450,BIO,deep_family,6.5,,9300000.0,11.8,,Tmarg,Deep paralog family D=6.5,no,,Nelson et al. 2009 Hum Genomics 4:59-65
+Immunoglobulin SF,BIO,deep_family,6.5,,9300000.0,11.8,,Tmarg,Deep paralog family D=6.5,no,,Harpaz & Chothia 1994 JMB 238:528-539
+Hox clusters,BIO,deep_family,5.5,,9300000.0,18.5,,Tmarg,Deep paralog family D=5.5,no,,Amores et al. 1998 Science 282:1711-1714
+bHLH TFs,BIO,deep_family,5.5,,9300000.0,18.5,,Tmarg,Deep paralog family D=5.5,no,,Simionato et al. 2007 BMC Evol Biol 7:33
+ABC transporters,BIO,deep_family,5.0,,20400000000000.0,459.1,,T2ok,Deep paralog family D=5.0,no,,Dean et al. 2001 Genome Res 11:1156-1166
+Amphioxus TLR,BIO,deep_family,9.0,,400000000.0,9.0,,T3req,Deep paralog family D=9.0,no,,Huang et al. 2008 J Immunol 180:6183-6191; Dishaw et al. 2012
+Rice NBS-LRR,BIO,deep_family,5.5,,160000000.0,23.0,,T3req,Deep paralog family D=5.5; O. sativa lineage,no,,Zhou et al. 2004 Mol Genet Genomics 271:402-415
+Natural language morpheme families,LANG,cross_domain,4.5,,7000000000000.0,715.3,,Tmarg_cultural,Cross-domain LANG,no,,Massive parallelism; sequential dependency contested
+Legal precedent chains,LANG,cross_domain,12.5,,1400000000.0,5.4,,Tmarg_cultural,Cross-domain LANG,no,,Fowler & Jeon 2008; deep but structured search
+Mathematical notation,LANG,cross_domain,7.0,,1000000000.0,19.3,,Tmarg_cultural,Cross-domain LANG,no,,Marginal at formal proof level D=15-25
+Musical composition forms,LANG,cross_domain,5.5,,100000000.0,28.5,,Tmarg_cultural,Cross-domain LANG,no,,Lerdahl & Jackendoff 1983
+Proverb families,LANG,cross_domain,1.5,,1000000000000.0,100000000.0,,T2ok,Cross-domain LANG,no,,Paradigmatic T2ok control
+Linux kernel (module nesting),COMP,cross_domain,8.0,,2500000.0,6.3,,Tmarg_cultural,Cross-domain COMP,no,,Module nesting is gene-family analog; call graph is NOT
+Chess opening trees (branching),COMP,cross_domain,10.0,,10000000000.0,10.0,,Tmarg_cultural,Cross-domain COMP,no,,Blasius & Tonjes 2009
+Programming language families,COMP,cross_domain,6.5,,10000.0,4.1,,Tmarg_cultural,Cross-domain COMP,no,,Lateral influences complicate strict genealogy
+Compiler IR hierarchies,COMP,cross_domain,8.5,,1000000.0,5.1,,Tmarg_cultural,Cross-domain COMP,no,,Rust: 7 pipeline stages; LLVM adds 4 more
+Regular expressions,COMP,cross_domain,2.5,,10000000000.0,10000.0,,T2ok,Cross-domain COMP,no,,Chomsky Type 3; non-recursive
+Finite automata,COMP,cross_domain,1.0,,,NA,,Tna,Cross-domain COMP,no,,flat
+Patent citation genealogy,ECON,cross_domain,5.5,,10000000.0,18.7,,Tmarg_cultural,Cross-domain ECON,no,,USPTO diameter 22; cultural evolution
+Corporate hierarchies,ECON,cross_domain,10.0,,,NA,,Tna,Cross-domain ECON,no,,Designed not evolved; Ewens & Giroud 2025
+Baby name families,ECON,cross_domain,1.5,,,NA,,T2ok,Cross-domain ECON,no,,Flat; Hahn & Bentley 2003
+Dog breed lineages,ECON,cross_domain,2.5,,,NA,,T2ok,Cross-domain ECON,no,,Artificial selection; Parker et al. 2017
+Income/wealth,ECON,cross_domain,,,,NA,,Tna,Cross-domain ECON,no,,no hierarchy
+Stock returns,ECON,cross_domain,,,,NA,,Tna,Cross-domain ECON,no,,no hierarchy
+City sizes,ECON,cross_domain,,,,NA,,Tna,Cross-domain ECON,no,,Gibrat mechanism
+PPI module hierarchy,INFO,cross_domain,5.0,,1000000000000.0,251.2,,T3req_bio,Cross-domain INFO,no,,Evolutionary (germline); Ravasz et al. 2002
+WWW site nesting,INFO,cross_domain,4.0,,10000000.0,56.2,,Tna,Cross-domain INFO,no,,Constructed not evolved
+Scientific citation genealogy,INFO,cross_domain,4.0,,,NA,,Tmarg,Cross-domain INFO,no,,Weakly evolutionary; cultural
+Internet AS topology,INFO,cross_domain,2.5,,,NA,,Tna,Cross-domain INFO,no,,Constructed; Faloutsos et al. 1999
+Brain cortical hierarchy (GENE-FAMILY BASIS),NEUR,cross_domain,6.0,,1000000000.0,31.6,,T3req_bio,Cross-domain NEUR,no,,TF superfamilies encoding cortical specification
+Neural cell type diversity,NEUR,cross_domain,4.0,,1000000000.0,177.8,,T3req_bio,Cross-domain NEUR,no,,Allen Brain Cell Atlas; Yao et al. 2023
+Memory schemas,NEUR,cross_domain,5.0,,,NA,,Tmarg,Cross-domain NEUR,no,,Within-lifetime; constructed
+Neuronal avalanches,NEUR,cross_domain,,,,NA,,Tna,Cross-domain NEUR,no,,dynamics not hierarchy
+Simple tandem repeats (microsatellites),BIO,shallow,1,,,NA,,T2ok,Shallow: No duplication-divergence; slippage only,no,,Ellegren 2004 Nat Rev Genet 5:435-445
+tRNA gene families (bacteria),BIO,shallow,1-2,,,NA,,T2ok,Shallow: Gene conversion homogenizes; dosage not hierarchy,no,,Dong et al. 1996 J Mol Biol 260:649-663
+SINEs in bacteria,BIO,shallow,0,,,NA,,Tna,Shallow: Mechanism absent in prokaryotes,no,,Kramerov & Vassetzky 2011 WIREs RNA 2:772-786
+M. tuberculosis PE/PPE families,BIO,shallow,2-3,,,NA,,T2ok,Shallow: Closed pan-genome; tandem duplication only,no,,Gey van Pittius et al. 2006 BMC Evol Biol 6:95
+Somatic VDJ recombination products,IMMUNE,shallow,3,,,NA,,T2ok,Shallow: Programmed mechanism; fixed depth ceiling,no,,Tonegawa 1983 Nature 302:575-581
+CRISPR spacer arrays,IMMUNE,shallow,1,,,NA,,T2ok,Shallow: Linear prepending; no nesting possible,no,,Barrangou et al. 2007 Science 315:1709-1712
+Buchnera aphidicola,EXIT,shallow,0-1,,,NA,,Tna,Shallow: Mullers ratchet; no duplication operator,no,,Shigenobu et al. 2000 Nature 407:81-86
+Carsonella ruddii,EXIT,shallow,0,,,NA,,Tna,Shallow: Extreme reduction; 160 kb genome,no,,Nakabachi et al. 2006 Science 314:267
+Hodgkinia cicadicola,EXIT,shallow,0,,,NA,,Tna,Shallow: Extreme reduction; genome fission,no,,McCutcheon et al. 2009 PLoS Genet 5:e1000565
+Tremblaya princeps,EXIT,shallow,0,,,NA,,Tna,Shallow: Extreme reduction; 110 genes,no,,McCutcheon & von Dohlen 2011 Curr Biol 21:1366-1372
+CPR bacteria,BOUNDARY,shallow,1-2,,,NA,,T2ok,Shallow: Reductive episymbiosis,no,,Brown et al. 2015 Nature 523:208-211
+Cancer SCNA nesting,SOMATIC,shallow,2-3,,,NA,,T2ok,Shallow: Compressed T (~decades); dosage constraint,no,,Zack et al. 2013 Nat Genet 45:1134-1140
+Normal tissue clonal expansion,SOMATIC,shallow,1-2,,,NA,,T2ok,Shallow: Homeostatic suppression,no,,Martincorena et al. 2015 Science 348:880-886
+TCR clonotype tree depth,IMMUNE,shallow,1-2,,,NA,,T2ok,Shallow: No SHM; compressed T,no,,Robins et al. 2009 Blood 114:4099-4107
+B cell affinity maturation,IMMUNE,shallow,2-3,,,NA,,T2ok,Shallow: Compressed T (weeks); affinity ceiling,no,,Victora & Nussenzweig 2012 Annu Rev Immunol 30:429-457
+Proverbs (oral tradition),LANG,shallow,1-2,,,NA,,T2ok,Shallow: Flat structure; no recursive nesting,no,,Mieder 2004 Proverbs: A Handbook
+Snowflake branching,PHYS,physical_fractal,5-6,,,NA,,Tna,Physical: DLA + crystal anisotropy,no,,Libbrecht 2005 Rep Prog Phys 68:855-895
+Metal dendrite solidification,PHYS,physical_fractal,3-5,,,NA,,Tna,Physical: Mullins-Sekerka instability,no,,Kurz & Fisher 1998 Fundamentals of Solidification
+Kolmogorov turbulence cascade,PHYS,physical_fractal,10+,,,NA,,Tna,Physical: Inertial energy cascade,no,,Kolmogorov 1941 Doklady 30:299-303
+Dendritic river networks,PHYS,physical_fractal,4-12 (Strahler),,,NA,,Tna,Physical: Erosive channel formation,no,,Horton 1945 GSA Bull 56:275-370
+Fractal coastlines,PHYS,physical_fractal,Unbounded,,,NA,,Tna,Physical: Multi-scale erosion,no,,Mandelbrot 1967 Science 156:636-638
+Cosmic large-scale structure,PHYS,physical_fractal,3-4,,,NA,,Tna,Physical: Gravitational hierarchical clustering,no,,Springel et al. 2005 Nature 435:629-636
+Atmospheric convection cells,PHYS,physical_fractal,2-3,,,NA,,Tna,Physical: Rayleigh-Benard instability,no,,Emanuel 1994 Atmospheric Convection
+Fractal antennas (engineered),PHYS,physical_fractal,3-6,,,NA,,Tna,Physical: Human engineering,no,,Puente-Baliarda et al. 1998 IEEE TAP 46:517-524
+Mathematical fractals,PHYS,physical_fractal,Unbounded,,,NA,,Tna,Physical: Iterative function,no,,Mandelbrot 1982 Fractal Geometry of Nature
+Lung bronchial tree (POSITIVE CONTROL),PHYS,physical_fractal,23,,,NA,,T3req,Physical: Developmental genetics (FGF10-FGFR2b),no,,Metzger et al. 2008 Nature 453:745-750; Weibel 1963
+Horizontal gene transfer networks,BIO,adversarial,,,,NA,,Tmarg,Adversarial test case,no,,Gogarten et al. 2002 Mol Biol Evol
+Transposable element families,BIO,adversarial,,,,NA,,Tmarg,Adversarial test case,no,,Wicker et al. 2007 Nat Rev Genet
+Retroviral integrations (ERVs),BIO,adversarial,,,,NA,,T2ok,Adversarial test case,no,,Jern & Coffin 2008 Microbiol Mol Biol Rev
+CpG island families,BIO,adversarial,,,,NA,,T2ok,Adversarial test case,no,,Illingworth & Bird 2009 FEBS Lett
+Microsatellite expansion,BIO,adversarial,,,,NA,,T2ok,Adversarial test case,no,,Ellegren 2004 Nat Rev Genet
+Viral quasispecies,BIO,adversarial,,,,NA,,T2ok,Adversarial test case,no,,Eigen 1993; Domingo et al. 2012
+Plasmid compatibility groups,BIO,adversarial,,,,NA,,Tna,Adversarial test case,no,,Novick 1987 Microbiol Rev
+Prophage families,BIO,adversarial,,,,NA,,T2ok,Adversarial test case,no,,Casjens 2003 Mol Microbiol
+FGF family,NEUR,cortical_family,5.0,,9300000.0,24.8,,Tmarg,Cortical gene family; Tmarg per report,no,,Ornitz & Itoh 2015 WIREs Dev Biol
+Wnt family,NEUR,cortical_family,5.0,,9300000.0,24.8,,Tmarg,Cortical gene family; Tmarg per report,no,,Nusse & Clevers 2017 Cell
+Eph/ephrin family,NEUR,cortical_family,5.0,,9300000.0,24.8,,Tmarg,Cortical gene family; Tmarg per report,no,,Kania & Klein 2016 Genes Dev
+NR superfamily,NEUR,cortical_family,6.0,,9300000.0,14.5,,Tmarg,Cortical gene family; Tmarg per report,no,,Bookout et al. 2006 Cell

@@ -9,3 +9,4 @@ rank,family,D_depth,members_human,deepest_split_age,duplication_mode,phylo_metho
 8,Hox clusters,5.5,39,>600 Mya,Tandem + 2R WGD,ML/Bayesian,"Amores et al. 1998 Science 282:1711-1714"
 9,bHLH TFs,5.5,118,>600 Mya,Segmental + 2R WGD,Bayesian,"Simionato et al. 2007 BMC Evol Biol 7:33"
 10,ABC transporters,5,48,>2.0 Gya,Ancient segmental,ML,"Dean et al. 2001 Genome Res 11:1156-1166"
+11,Amphioxus TLR,9,72 (amphioxus),>550 Mya,Tandem,ML/Bayesian,"Huang et al. 2008 J Immunol 180:6183-6191; Dishaw et al. 2012"

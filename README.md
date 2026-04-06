@@ -4,7 +4,7 @@
 
 ## Overview
 
-This repository contains the complete replication package for the TIME-AR-001 temporal admissible region analysis — a cross-domain empirical study assessing whether observed hierarchical complexity in ~100 natural and cultural systems could plausibly have arisen within available evolutionary time using sub-Tier-3 operators.
+This repository contains the complete replication package for the TIME-AR-001 temporal admissible region analysis — a cross-domain empirical study assessing whether observed hierarchical complexity in ~110 natural and cultural systems could plausibly have arisen within available evolutionary time using sub-Tier-3 operators.
 
 The study introduces feature **F15 (Temporal Feasibility)**, split into:
 - **F15a** (organism-level): uses organism-level hierarchy depth D and evolutionary time budget T
@@ -14,80 +14,123 @@ The formal basis is the `temporal_separation_capstone` theorem (TIME-SPEC-001), 
 - **Tier 2 (IndelMutation):** genome length ≤ g₀ + T × k (linear growth)
 - **Tier 3 (RecursiveMutation):** genome length ≥ 2^n in n steps (exponential growth)
 
+## Key Results (v3.1.1)
+
+**6 gene families with F15b = T3req (γ_crit ≤ 100):**
+
+| Rank | Gene Family | D | γ_crit | Confidence |
+|------|-------------|---|--------|------------|
+| 1 | Protein kinases (human) | 8 | **7.4** | Tier 1 |
+| 2 | Amphioxus TLR (no WGD) | 9 | **9.0** | Tier 1 |
+| 3 | GPCR superfamily | 7.5 | **11** | Tier 2 |
+| 4 | Zinc finger TFs | 7.5 | **11** | Tier 2 |
+| 5 | Olfactory receptors | 6.5 | **18** | Tier 3 |
+| 6 | Rice NBS-LRR | 5.5 | **23** | Tier 3 |
+
+**Classification distribution across ~110 systems:**
+
+| Classification | Count | Description |
+|---------------|:-----:|-------------|
+| T3req / T3req_bio | ~9 | Deep gene families + biological cross-domain |
+| Tmarg | ~22 | Organisms at organism level, near-threshold cases |
+| T2ok | ~20 | Shallow biological, somatic, economic |
+| Tna | ~25 | Physical fractals, exits, scalars |
+| Tmarg_cultural | ~12 | All cultural systems (contingency flag) |
+
+**Headline results:**
+1. **Human protein kinases (D=8, γ_crit=7.4):** Any efficiency gap >7.4× triggers temporal exclusion. Within the empirically observed recombination advantage range (γ ~ 2-10).
+2. **Amphioxus TLR (D=9, γ_crit=9.0, zero WGD):** Proves deep hierarchy is achievable without whole-genome duplication, through tandem duplication alone.
+
+**Rank-order validation:** All 6 T3req families have D ≥ 5.0; all 24 T2ok assignments have D ≤ 4.5. Fisher exact test p < 10⁻⁶ (no overlap).
+
 ## Repository Structure
 
 ```
 TIME-AR-001-Study/
 ├── README.md                    # This file
+├── LICENSE
 ├── docs/
-│   ├── TIME_AR_001_Report.md    # Complete research report (v2.0)
+│   ├── TIME_AR_001_Report.md    # Complete research report (v3.1.1)
 │   ├── TIME_AR_001_Report.docx  # DOCX with embedded figures
-│   ├── ROUND2_REVISION_SUMMARY.md # Change log from Round 2 review
+│   ├── TIME_AR_001_Tables.docx  # Supplementary tables (generated)
+│   ├── ROUND2_REVISION_SUMMARY.md
+│   ├── V3_REVISION_SUMMARY.md
 │   └── TIME-AR-001-spec.md      # Original study specification
 ├── data/
 │   ├── raw/
-│   │   ├── organism_hierarchy_depths.csv    # D measurements (2 methods per organism)
-│   │   ├── deep_paralog_families.csv        # 10 deepest gene families
+│   │   ├── organism_hierarchy_depths.csv    # D measurements (2 methods, 16 organisms)
+│   │   ├── deep_paralog_families.csv        # 11 deepest gene families (incl. amphioxus TLR)
 │   │   ├── time_budgets.csv                 # T (conservative/mid/liberal) per organism
-│   │   ├── shallow_systems.csv              # D for all T2ok/Tna systems
-│   │   ├── physical_fractals.csv            # Physical negative controls
-│   │   ├── cross_domain_temporal.csv        # LANG/COMP/ECON/INFO/NEUR systems
+│   │   ├── shallow_systems.csv              # ~20 T2ok/Tna systems
+│   │   ├── physical_fractals.csv            # 10 physical negative controls + 1 positive
+│   │   ├── cross_domain_temporal.csv        # ~24 LANG/COMP/ECON/INFO/NEUR systems
 │   │   ├── gamma_calibration.csv            # Empirical gamma estimates from literature
-│   │   ├── d_distributions.csv              # Full D distribution for 3 organisms
-│   │   ├── wgd_adjusted_d.csv              # WGD-adjusted D values
-│   │   └── adversarial_cases.csv           # Adversarial test cases
-│   └── processed/
-│       ├── f15_scorecard.csv               # Complete F15a/F15b scorecard (~100 systems)
-│       ├── gamma_crit_table.csv            # gamma_crit for all systems
-│       ├── temporal_exclusion_zones.csv    # gamma^D vs T computations
-│       └── classification_summary.csv      # Final T3req/T2ok/Tmarg/Tna counts
-├── figures/
-│   ├── fig_T1_exclusion_zone.png           # D vs T with gamma contours
-│   ├── fig_T2_d_observed.png               # D across all systems
-│   ├── fig_T3_deep_families.png            # 10 deepest gene families
-│   ├── fig_T4_immune_control.png           # Germline vs somatic comparison
-│   ├── fig_T5_physical_vs_bio.png          # Snowflake vs kinases
-│   ├── fig_T6_cross_domain_matrix.png      # 9 domains heatmap
-│   ├── fig_T7_gamma_sensitivity.png        # gamma sensitivity for human
-│   └── fig_T8_roc_classification.png       # D vs log(T) classification plot
+│   │   ├── d_distributions.csv              # D distribution for 3 organisms
+│   │   ├── wgd_adjusted_d.csv              # WGD-adjusted D values (15 family entries)
+│   │   ├── adversarial_cases.csv           # 8 adversarial test cases
+│   │   └── cortical_families.csv           # 4 cortical-specification gene families
+│   └── processed/                          # All generated by compute_gamma_crit.py
+│       ├── master_scorecard.csv            # Authoritative: 1 row per system (~110)
+│       ├── f15_scorecard.csv               # Organism-level F15a/F15b (16 rows)
+│       ├── gamma_crit_table.csv            # All systems with γ_crit, sorted ascending
+│       ├── temporal_exclusion_zones.csv    # γ^D at γ=2,10,100 for organisms
+│       ├── classification_summary.csv      # Verdict counts
+│       └── fisher_test_result.csv          # Fisher exact test output
+├── figures/                                # All generated by generate_figures.py
+│   ├── fig_T1_exclusion_zone.png           # D vs log(T) with γ contours
+│   ├── fig_T2_gamma_crit_bars.png          # γ_crit for T3req families
+│   ├── fig_T3_deep_families.png            # 11 deepest gene families (D_raw vs D_WGD)
+│   ├── fig_T4_physical_vs_bio.png          # Physical fractals vs biological hierarchies
+│   ├── fig_T5_two_regime_gamma.png         # Two-regime empirical γ structure
+│   ├── fig_T6_d_distribution.png           # Gene family depth distribution
+│   ├── fig_T7_sensitivity.png              # γ_crit sensitivity to D ± 1
+│   └── fig_T8_classification_pie.png       # Classification distribution
 ├── scripts/
-│   ├── compute_gamma_crit.py               # gamma_crit computation
-│   ├── generate_figures.py                 # All figure generation
-│   ├── build_docx.py                       # DOCX builder with figures
+│   ├── compute_gamma_crit.py               # Core computation: all ~110 systems
+│   ├── fisher_test.py                      # Fisher exact test reproduction
+│   ├── generate_figures.py                 # All figure generation (matplotlib)
+│   ├── build_docx.py                       # Supplementary DOCX builder
 │   └── run_all.sh                          # Complete replication script
 └── LICENSE
 ```
 
-## Key Results (v2.0)
-
-| Classification | Count | Key Examples |
-|---------------|:-----:|-------------|
-| **F15b T3req** (γ_crit ≤ 100) | ~8-12 | Kinases (γ_crit=8.6), GPCRs (11), ZFs (11), olfactory receptors (18), rice NBS-LRR (96) |
-| **F15a Tmarg** | ~15-20 | Most organisms at organism level; cultural systems (all Tmarg†) |
-| **T2ok** | ~20-25 | Shallow families, somatic systems, closed pan-genomes |
-| **Tna** | ~25-30 | Physical fractals, endosymbiont exits, scalar distributions |
-
-**Headline result:** The protein kinase superfamily (D=8) in the human lineage has γ_crit = 8.6 — any efficiency gap >9× triggers temporal exclusion.
-
-## Replication
+## Quick Start (Replication)
 
 ```bash
-# Generate all figures and processed data
-cd scripts/
-python3 compute_gamma_crit.py
-python3 generate_figures.py
-python3 build_docx.py
+# Clone the repository
+git clone https://github.com/sammolyneux-poppy/TIME-AR-001-Study.git
+cd TIME-AR-001-Study
 
-# Or run everything at once
-bash run_all.sh
+# Install dependencies
+pip3 install matplotlib python-docx scipy
+
+# Run the full pipeline
+bash scripts/run_all.sh
+
+# Or run steps individually:
+python3 scripts/compute_gamma_crit.py    # Core computation
+python3 scripts/fisher_test.py           # Statistical test
+python3 scripts/generate_figures.py      # Figures
+python3 scripts/build_docx.py            # Supplementary DOCX
 ```
+
+**Output:** All processed CSVs in `data/processed/`, figures in `figures/`, supplementary DOCX in `docs/`.
 
 ## Dependencies
 
 - Python 3.9+
-- matplotlib
-- numpy
-- python-docx
+- matplotlib (figures)
+- scipy (Fisher test; falls back to manual computation if unavailable)
+- python-docx (DOCX output; falls back to text if unavailable)
+
+## v3.1.1 Arithmetic Correction
+
+v3.1.1 corrects a systematic arithmetic error in organism-level γ_crit values present in v3.1. All organism-level gamma_crit values are now computed as `T^(1/D)` using the stated D_consensus and T_midpoint. Three organism-level classifications changed (C. elegans, S. cerevisiae, P. aeruginosa: T2ok → Tmarg). No family-level (F15b) classifications changed. The 6 T3req gene family results are unaffected.
+
+## Related Repositories
+
+- **FP4 Lean 4 Proof:** The formal proof establishing computational universality of recursive genome evolution
+- **UTM-AR-001-Study:** [UTM Admissible Regions Study](https://github.com/sammolyneux-poppy/UTM-AR-001-Study) — companion cross-domain validation (F1-F14)
 
 ## Citation
 
@@ -95,4 +138,4 @@ Molyneux, S. (2026). "Computational Universality of Recursive Genome Evolution."
 
 ## License
 
-CC BY 4.0
+MIT

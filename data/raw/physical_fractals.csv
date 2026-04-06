@@ -1,11 +1,11 @@
-system,D_apparent,time_to_form,mechanism,F1_heritable,F2_duplication,F3_deletion,F4_selection,F15_verdict,primary_citation
-Snowflake branching,5-6,Seconds,DLA + crystal anisotropy,NO,NO,NO,NO,Tna,"Libbrecht 2005 Rep Prog Phys 68:855-895"
-Metal dendrite solidification,3-5,Milliseconds,Mullins-Sekerka instability,NO,NO,NO,NO,Tna,"Kurz & Fisher 1998 Fundamentals of Solidification"
-Kolmogorov turbulence cascade,10+,Seconds (1 turnover),Inertial energy cascade,NO,NO,NO,NO,Tna,"Kolmogorov 1941 Doklady 30:299-303"
-Dendritic river networks,4-12 (Strahler),1e6-1e7 yr,Erosive channel formation,NO,NO,NO,NO,Tna,"Horton 1945 GSA Bull 56:275-370"
-Fractal coastlines,Unbounded,1e6-1e8 yr,Multi-scale erosion,NO,NO,NO,NO,Tna,"Mandelbrot 1967 Science 156:636-638"
-Cosmic large-scale structure,3-4,13 Gyr (simultaneous),Gravitational hierarchical clustering,NO,NO,NO,NO,Tna,"Springel et al. 2005 Nature 435:629-636"
-Atmospheric convection cells,2-3,Hours-days,Rayleigh-Benard instability,NO,NO,NO,NO,Tna,"Emanuel 1994 Atmospheric Convection"
-Fractal antennas (engineered),3-6,Instantaneous (designed),Human engineering,NO,NO,NO,NO,Tna,"Puente-Baliarda et al. 1998 IEEE TAP 46:517-524"
-Mathematical fractals,Unbounded,Instantaneous,Iterative function,NO,NO,NO,NO,Tna,"Mandelbrot 1982 Fractal Geometry of Nature"
-Lung bronchial tree (POSITIVE CONTROL),23,5e8 yr evolution,Developmental genetics (FGF10-FGFR2b),YES,YES,YES,YES,T3req,"Metzger et al. 2008 Nature 453:745-750; Weibel 1963"
+system,D_apparent,time_to_form,mechanism,F1_heritable,F2_duplication,F3_deletion,F4_selection,F15_verdict,primary_citation,control_type
+Snowflake branching,5-6,Seconds,DLA + crystal anisotropy,NO,NO,NO,NO,Tna,"Libbrecht 2005 Rep Prog Phys 68:855-895",negative_control
+Metal dendrite solidification,3-5,Milliseconds,Mullins-Sekerka instability,NO,NO,NO,NO,Tna,"Kurz & Fisher 1998 Fundamentals of Solidification",negative_control
+Kolmogorov turbulence cascade,10+,Seconds (1 turnover),Inertial energy cascade,NO,NO,NO,NO,Tna,"Kolmogorov 1941 Doklady 30:299-303",negative_control
+Dendritic river networks,4-12 (Strahler),1e6-1e7 yr,Erosive channel formation,NO,NO,NO,NO,Tna,"Horton 1945 GSA Bull 56:275-370",negative_control
+Fractal coastlines,Unbounded,1e6-1e8 yr,Multi-scale erosion,NO,NO,NO,NO,Tna,"Mandelbrot 1967 Science 156:636-638",negative_control
+Cosmic large-scale structure,3-4,13 Gyr (simultaneous),Gravitational hierarchical clustering,NO,NO,NO,NO,Tna,"Springel et al. 2005 Nature 435:629-636",negative_control
+Atmospheric convection cells,2-3,Hours-days,Rayleigh-Benard instability,NO,NO,NO,NO,Tna,"Emanuel 1994 Atmospheric Convection",negative_control
+Fractal antennas (engineered),3-6,Instantaneous (designed),Human engineering,NO,NO,NO,NO,Tna,"Puente-Baliarda et al. 1998 IEEE TAP 46:517-524",negative_control
+Mathematical fractals,Unbounded,Instantaneous,Iterative function,NO,NO,NO,NO,Tna,"Mandelbrot 1982 Fractal Geometry of Nature",negative_control
+Lung bronchial tree (POSITIVE CONTROL),23,5e8 yr evolution,Developmental genetics (FGF10-FGFR2b),YES,YES,YES,YES,T3req,"Metzger et al. 2008 Nature 453:745-750; Weibel 1963",positive_control
