@@ -19,6 +19,10 @@ Checks:
   12. Dynamic sources in source_registry have access_date populated          [HARD]
   13. All source_ids in time_evidence_matrix resolve to source_registry     [soft]
   14. source_registry has >= 20 rows with doi or url populated              [soft]
+  15. time_budget_evidence.csv clade_age_Mya matches time_budgets.csv       [HARD]
+  16. time_budget_evidence.csv gen_time_hr matches time_budgets.csv         [HARD]
+  17. cross_domain_temporal.csv computational_role = executable_input       [HARD]
+  18. CDT Tna rows have T_evidence_mode=not_applicable; scored rows don't   [HARD]
 
 Produces:
   data/processed/source_validation_report.csv   — per-check pass/fail table
@@ -363,6 +367,106 @@ def run_checks():
             c.pass_(f"{len(with_link)}/{len(rows)} registry rows have doi or url")
         else:
             c.fail(f"Only {len(with_link)} rows have doi or url (need >= 20)")
+    checks.append(c)
+
+    # ---- Check 15: TBE clade_age_Mya matches time_budgets (within 0.5%) ----
+    c = Check("tbe_clade_age_sync",
+              "time_budget_evidence.csv clade_age_Mya matches time_budgets.csv for each organism")
+    tb_rows  = read_csv(TIME_BUDGETS_PATH)
+    tbe_rows = read_csv(TBE_PATH)
+    if tb_rows is None or tbe_rows is None:
+        c.fail("time_budgets.csv or time_budget_evidence.csv not found")
+    else:
+        tbe_idx = {r.get("organism", "").strip(): r for r in tbe_rows}
+        mismatches = []
+        for tb_r in tb_rows:
+            org = tb_r.get("organism", "").strip()
+            tbe_r = tbe_idx.get(org)
+            if tbe_r is None:
+                mismatches.append(f"{org}(missing)")
+                continue
+            try:
+                tb_val  = float(tb_r.get("clade_age_Mya", ""))
+                tbe_val = float(tbe_r.get("clade_age_Mya", ""))
+            except (ValueError, TypeError):
+                mismatches.append(f"{org}(non-numeric)")
+                continue
+            if tb_val == 0:
+                continue
+            if abs(tb_val - tbe_val) / tb_val > 0.005:  # 0.5% tolerance
+                mismatches.append(f"{org}(TB={tb_val},TBE={tbe_val})")
+        if not mismatches:
+            c.pass_(f"All {len(tb_rows)} organisms have matching clade_age_Mya")
+        else:
+            c.fail(f"clade_age_Mya mismatch: {mismatches[:5]}")
+    checks.append(c)
+
+    # ---- Check 16: TBE gen_time_hr matches time_budgets (within 0.5%) ----
+    c = Check("tbe_gen_time_sync",
+              "time_budget_evidence.csv gen_time_hr matches time_budgets.csv for each organism")
+    tb_rows  = read_csv(TIME_BUDGETS_PATH)
+    tbe_rows = read_csv(TBE_PATH)
+    if tb_rows is None or tbe_rows is None:
+        c.fail("time_budgets.csv or time_budget_evidence.csv not found")
+    else:
+        tbe_idx = {r.get("organism", "").strip(): r for r in tbe_rows}
+        mismatches = []
+        for tb_r in tb_rows:
+            org = tb_r.get("organism", "").strip()
+            tbe_r = tbe_idx.get(org)
+            if tbe_r is None:
+                mismatches.append(f"{org}(missing)")
+                continue
+            try:
+                tb_val  = float(tb_r.get("gen_time_hr", ""))
+                tbe_val = float(tbe_r.get("gen_time_hr", ""))
+            except (ValueError, TypeError):
+                mismatches.append(f"{org}(non-numeric)")
+                continue
+            if tb_val == 0:
+                continue
+            if abs(tb_val - tbe_val) / tb_val > 0.005:  # 0.5% tolerance
+                mismatches.append(f"{org}(TB={tb_val},TBE={tbe_val})")
+        if not mismatches:
+            c.pass_(f"All {len(tb_rows)} organisms have matching gen_time_hr")
+        else:
+            c.fail(f"gen_time_hr mismatch: {mismatches[:5]}")
+    checks.append(c)
+
+    # ---- Check 17: CDT computational_role = executable_input on all rows ----
+    c = Check("cdt_computational_role",
+              "All cross_domain_temporal.csv rows have computational_role = executable_input")
+    rows = read_csv(CDT_PATH)
+    if rows is None:
+        c.fail("cross_domain_temporal.csv not found")
+    else:
+        bad = [r.get("system", "?") for r in rows
+               if r.get("computational_role", "").strip() != "executable_input"]
+        if not bad:
+            c.pass_(f"All {len(rows)} CDT rows have computational_role = executable_input")
+        else:
+            c.fail(f"{len(bad)} rows not executable_input: {bad[:5]}")
+    checks.append(c)
+
+    # ---- Check 18: CDT Tna / scored rows internally consistent ----
+    c = Check("cdt_tna_consistency",
+              "CDT Tna rows have T_evidence_mode=not_applicable; scored rows have explicit T_evidence_mode")
+    rows = read_csv(CDT_PATH)
+    if rows is None:
+        c.fail("cross_domain_temporal.csv not found")
+    else:
+        bad = []
+        for r in rows:
+            verdict = r.get("F15_verdict", "").strip()
+            t_mode  = r.get("T_evidence_mode", "").strip()
+            if verdict == "Tna" and t_mode not in ("not_applicable", ""):
+                bad.append(f"{r.get('system','?')}(Tna but T_mode={t_mode})")
+            elif verdict not in ("Tna", "") and t_mode == "not_applicable":
+                bad.append(f"{r.get('system','?')}(verdict={verdict} but T_mode=not_applicable)")
+        if not bad:
+            c.pass_(f"All {len(rows)} CDT rows internally consistent (Tna↔not_applicable)")
+        else:
+            c.fail(f"Inconsistencies: {bad[:5]}")
     checks.append(c)
 
     return checks

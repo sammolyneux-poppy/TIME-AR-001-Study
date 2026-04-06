@@ -13,3 +13,7 @@ d_distributions_provenance,d_distributions.csv has count_definition and source_i
 dynamic_sources_access_date,"Dynamic database sources (TimeTree, Ensembl) have access_date in source_registry",yes,PASS,"All dynamic sources ({'ensembl_compara', 'timetree_db'}) have access_date"
 tem_source_ids_resolve,All source_ids in time_evidence_matrix.csv resolve to source_registry.csv,no,PASS,All source_ids in TEM resolve to registry
 registry_doi_url_coverage,source_registry.csv has >= 20 rows with doi or url populated,no,PASS,95/103 registry rows have doi or url
+tbe_clade_age_sync,time_budget_evidence.csv clade_age_Mya matches time_budgets.csv for each organism,yes,PASS,All 20 organisms have matching clade_age_Mya
+tbe_gen_time_sync,time_budget_evidence.csv gen_time_hr matches time_budgets.csv for each organism,yes,PASS,All 20 organisms have matching gen_time_hr
+cdt_computational_role,All cross_domain_temporal.csv rows have computational_role = executable_input,yes,PASS,All 26 CDT rows have computational_role = executable_input
+cdt_tna_consistency,CDT Tna rows have T_evidence_mode=not_applicable; scored rows have explicit T_evidence_mode,yes,PASS,All 26 CDT rows internally consistent (Tna↔not_applicable)

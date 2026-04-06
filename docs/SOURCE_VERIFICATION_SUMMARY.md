@@ -8,7 +8,7 @@
 
 ## Validation Results
 
-**14/14 checks passed** | **0 failed**
+**18/18 checks passed** | **0 failed**
 
 | Check | Hard/Soft | Result |
 |---|---|---|
@@ -26,6 +26,10 @@
 | dynamic_sources_access_date | HARD | ✓ PASS |
 | tem_source_ids_resolve | soft | ✓ PASS |
 | registry_doi_url_coverage | soft | ✓ PASS |
+| tbe_clade_age_sync | HARD | ✓ PASS |
+| tbe_gen_time_sync | HARD | ✓ PASS |
+| cdt_computational_role | HARD | ✓ PASS |
+| cdt_tna_consistency | HARD | ✓ PASS |
 
 ---
 
