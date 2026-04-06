@@ -143,6 +143,37 @@ def main():
             check(f"README {cat} = {exp}", got == exp, f"got {got}")
 
     # ---------------------------------------------------------------
+    # 6. README metadata consistency
+    # ---------------------------------------------------------------
+    print("\n[6] README metadata consistency")
+    if os.path.isfile(readme_path):
+        # Deep-family authority: should reference confirmed_deep_families.csv, not T3REQ_FAMILIES
+        check(
+            "Deep-family authority points to CSV",
+            "confirmed_deep_families.csv" in readme_text,
+            "README should reference confirmed_deep_families.csv"
+        )
+        check(
+            "No stale T3REQ_FAMILIES reference as authority",
+            "identified via `T3REQ_FAMILIES`" not in readme_text,
+            "README still references code variable as authority"
+        )
+
+        # Deep-family count: should say 12, not 11
+        check(
+            "Deep-family CSV count says 12",
+            "12 deepest gene families" in readme_text,
+            "README still says 11 deepest gene families"
+        )
+
+        # Input file count: should say 10
+        check(
+            "Input file count says 10",
+            "10 structured input files" in readme_text,
+            "README has wrong input file count"
+        )
+
+    # ---------------------------------------------------------------
     # Summary
     # ---------------------------------------------------------------
     total = passed + failed

@@ -121,7 +121,7 @@ The gamma_crit <= 100 threshold for T3req is motivated by the empirical calibrat
 
 F15a and F15b do NOT contribute to the F1-F14 admissibility percentage. They are standalone temporal verdicts reported alongside, but independent of, the structural admissibility classification.
 
-> **Executable scope note (v3.1.1):** The computational pipeline in this repository materializes 92 systems from structured raw data across 12 data sources. The broader discussion in Sections 3-9 additionally references conceptual cases and literature-derived assessments not yet incorporated into the automated pipeline. All quantitative claims in the abstract and summary sections are based on the executable pipeline output.
+> **Executable scope note (v3.1.2):** The computational pipeline in this repository materializes 92 systems from structured raw data across 10 input files. The broader discussion in Sections 3-9 additionally references conceptual cases and literature-derived assessments not yet incorporated into the automated pipeline. All quantitative claims in the abstract and summary sections are based on the executable pipeline output.
 
 ### 1.3 The Temporal Exclusion Zone Concept
 
